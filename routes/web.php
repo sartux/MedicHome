@@ -8,8 +8,7 @@ use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\ValorCatalogoController;
 use App\Http\Controllers\MedicamentoController;
 use App\Http\Controllers\HistorialMedicamentoController;
-use App\Http\Controllers\OrdenMedicaController;
-use App\Http\Controllers\CitaMedicaController;
+use App\Http\Controllers\CitasMedicasController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\DashboardController;
 
@@ -29,13 +28,15 @@ Route::resource('catalogos', CatalogoController::class);
 Route::resource('valor_catalogos', ValorCatalogoController::class);
 Route::resource('medicamentos', MedicamentoController::class);
 Route::resource('historial_medicamentos', HistorialMedicamentoController::class);
-Route::resource('ordenes_medicas', OrdenMedicaController::class);
-Route::resource('citas_medicas', CitaMedicaController::class);
+Route::resource('ordenes.citas', CitasMedicasController::class);
+
 Route::resource('documentos', DocumentoController::class);
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+
 
 
 // Ruta al dashboard usando el DashboardController
@@ -58,6 +59,12 @@ require __DIR__.'/auth.php';
 
 Route::put('/familiares/{familiar}', [FamiliarController::class, 'update'])->name('familiares.update');
 Route::get('familiares/{familiar}/medicamentos', [FamiliarController::class, 'medicamentos'])->name('familiares.medicamentos');
+// Ruta para acceder a las citas de un familiar
+Route::get('familiares/{familiar}/citas', [CitasMedicasController::class, 'index'])->name('familiares.citas');
+
+// Ruta para gestionar las órdenes
+Route::get('familiares/{familiar}/ordenes', [CitasMedicasController::class, 'index'])->name('familiares.ordenes');
+
 
 
 Route::get('historial_medicamentos/{historialMedicamento}', [HistorialMedicamentoController::class, 'show'])->name('historial_medicamentos.show');

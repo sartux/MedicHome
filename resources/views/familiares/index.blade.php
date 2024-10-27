@@ -41,8 +41,11 @@
                             {{-- <a href="{{ route('familiares.edit', $familiar) }}" class="btn btn-info">
                                 <i class="fa-solid fa-capsules"></i> Medicamentos<!-- Icono de capsulas -->
                             </a> --}}
-                            <a href="{{ route('familiares.edit', $familiar) }}" class="btn btn-success">
-                                <i class="fa-solid fa-stethoscope"></i> Citas<!-- Icono de capsulas -->
+                            <a href="{{ route('familiares.ordenes', $familiar) }}" class="btn btn-success">
+                                <i class="fa-solid fa-file-invoice"></i> Órdenes
+                            </a>
+                            <a href="{{ route('familiares.citas', $familiar) }}" class="btn btn-success">
+                                <i class="fa-solid fa-stethoscope"></i> Citas
                             </a>
                         </td>
                         
