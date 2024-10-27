@@ -9,36 +9,32 @@ class HistorialMedicamento extends Model
 {
     use HasFactory;
 
-    // Especifica el nombre de la tabla si no sigue la convención
     protected $table = 'historial_medicamentos';
-
-    // Los campos que se pueden llenar
     protected $fillable = [
-        'Familiar_id', 
-        'medicamento_id', 
-        'descripcion_tratamiento', 
-        'dosis', 
-        'fecha_inicio', 
-        'fecha_final', 
+        'Familiar_id',
+        'medicamento_id',
+        'descripcion_tratamiento',
+        'dosis',
+        'fecha_inicio',
+        'fecha_final',
         'CATA_Estado'
     ];
 
-    // // Relación con la tabla familiares
+    // Relación con Familiar
     public function familiar()
-{
-    return $this->belongsTo(Familiar::class, 'Familiar_id');
-}
-
-    // Relación con la tabla medicamentos
-    public function medicamento()
     {
-        return $this->belongsTo(Medicamento::class);
+        return $this->belongsTo(Familiar::class, 'Familiar_id');
     }
 
-    // Relación con la tabla valor_catalogos para el estado (uso)
+    // Relación con Medicamento
+    public function medicamento()
+    {
+        return $this->belongsTo(Medicamento::class, 'medicamento_id');
+    }
+
+    // Relación con ValorCatalogo para el estado
     public function estado()
     {
         return $this->belongsTo(ValorCatalogo::class, 'CATA_Estado', 'Codigo');
     }
-    
 }

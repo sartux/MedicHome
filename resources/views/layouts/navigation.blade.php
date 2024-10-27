@@ -26,7 +26,7 @@
                     <x-nav-link href="#" class="inline-flex items-center">
                         {{ __('Familia') }}
                     </x-nav-link>
-                    <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded mt-1 min-w-max py-1">
+                    <ul class="absolute hidden bg-white shadow-lg rounded mt-2 min-w-max py-1 z-10 transition ease-in-out duration-150 delay-75">
                         <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{{ route('familiares.index') }}">Ver Familiares</a></li>
                         <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{{ route('familiares.create') }}">Agregar Familiar</a></li>
                     </ul>
@@ -36,7 +36,7 @@
                     <x-nav-link href="#" class="inline-flex items-center">
                         {{ __('Medicamentos') }}
                     </x-nav-link>
-                    <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded mt-1 min-w-max py-1">
+                    <ul class="absolute hidden bg-white shadow-lg rounded mt-2 min-w-max py-1 z-10 transition ease-in-out duration-150 delay-75">
                         <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{{ route('medicamentos.index') }}">Ver Medicamentos</a></li>
                         <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{{ route('medicamentos.create') }}">Agregar Medicamento</a></li>
                     </ul>
@@ -46,7 +46,7 @@
                     <x-nav-link href="#" class="inline-flex items-center">
                         {{ __('Configuración') }}
                     </x-nav-link>
-                    <ul class="absolute hidden group-hover:block bg-white shadow-lg rounded mt-1 min-w-max py-1">
+                    <ul class="absolute hidden bg-white shadow-lg rounded mt-2 min-w-max py-1 z-10 transition ease-in-out duration-150 delay-75">
                         <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="#">Usuarios</a></li>
                         <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="#">Perfiles</a></li>
                         <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="#">Servicios</a></li>
@@ -61,7 +61,7 @@
                     {{ Auth::user()->name }}
                     <svg class="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path d="M5.23 7.21a.75.75 0 011.07.02L10 10.878l3.7-3.666a.75.75 0 011.074 1.048l-4.27 4.233a.75.75 0 01-1.074 0L5.23 8.28a.75.75 0 01.02-1.07z"></path></svg>
                 </button>
-                <ul class="absolute hidden group-hover:block right-0 bg-white shadow-lg rounded mt-1 min-w-max py-1">
+                <ul class="absolute hidden bg-white shadow-lg rounded mt-2 min-w-max py-1 z-10 transition ease-in-out duration-150 delay-75">
                     <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{{ route('profile.edit') }}">Perfil</a></li>
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
@@ -74,3 +74,25 @@
         </div>
     </div>
 </nav>
+
+
+<!-- JavaScript para mostrar el submenú al pasar el mouse con un retraso en el cierre -->
+<script>
+    document.querySelectorAll('.group').forEach(item => {
+        let timeout;
+
+        // Mostrar el submenú al pasar el mouse
+        item.addEventListener('mouseenter', () => {
+            clearTimeout(timeout); // Cancelar cualquier cierre pendiente
+            item.querySelector('ul').classList.remove('hidden'); // Mostrar el submenú
+        });
+
+        // Retraso para ocultar el submenú cuando el mouse sale
+        item.addEventListener('mouseleave', () => {
+            timeout = setTimeout(() => {
+                item.querySelector('ul').classList.add('hidden'); // Ocultar el submenú
+            }, 100); // Tiempo en milisegundos (ajusta si es necesario)
+        });
+    });
+</script>
+

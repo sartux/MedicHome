@@ -57,4 +57,9 @@ require __DIR__.'/auth.php';
 // familiares
 
 Route::put('/familiares/{familiar}', [FamiliarController::class, 'update'])->name('familiares.update');
+Route::get('familiares/{familiar}/medicamentos', [FamiliarController::class, 'medicamentos'])->name('familiares.medicamentos');
+
+
+Route::get('historial_medicamentos/{historialMedicamento}', [HistorialMedicamentoController::class, 'show'])->name('historial_medicamentos.show');
+
 

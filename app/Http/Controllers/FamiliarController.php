@@ -69,4 +69,12 @@ public function update(Request $request, Familiar $familiare)
     return redirect()->route('familiares.index')->with('success', 'Familiar actualizado correctamente');
 }
 
+public function medicamentos(Familiar $familiar)
+{
+    // Asumiendo que tienes una relación `historialMedicamentos` en el modelo Familiar
+    $historialMedicamentos = $familiar->historialMedicamentos;
+
+    return view('historial_medicamentos.index', compact('familiar', 'historialMedicamentos'));
+}
+
 }

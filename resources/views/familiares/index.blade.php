@@ -35,9 +35,12 @@
                             <a href="{{ route('familiares.edit', $familiar) }}" class="btn btn-warning">
                                 <i class="fa-solid fa-wand-magic-sparkles"></i> Editar<!-- Icono de lápiz -->
                             </a>
-                            <a href="{{ route('familiares.edit', $familiar) }}" class="btn btn-info">
-                                <i class="fa-solid fa-capsules"></i> Medicamentos<!-- Icono de capsulas -->
+                            <a href="{{ route('familiares.medicamentos', $familiar) }}" class="btn btn-info">
+                                <i class="fa-solid fa-capsules"></i> Medicamentos
                             </a>
+                            {{-- <a href="{{ route('familiares.edit', $familiar) }}" class="btn btn-info">
+                                <i class="fa-solid fa-capsules"></i> Medicamentos<!-- Icono de capsulas -->
+                            </a> --}}
                             <a href="{{ route('familiares.edit', $familiar) }}" class="btn btn-success">
                                 <i class="fa-solid fa-stethoscope"></i> Citas<!-- Icono de capsulas -->
                             </a>
