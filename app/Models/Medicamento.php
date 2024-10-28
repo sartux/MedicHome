@@ -26,4 +26,8 @@ protected $table = 'medicamentos';
         return $this->belongsTo(ValorCatalogo::class, 'CATA_Uso', 'Codigo');
     }
 
+    public function estado()
+    {
+        return $this->belongsTo(ValorCatalogo::class, 'CATA_Estado','Codigo');
+    }
 }

@@ -21,25 +21,18 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($historialMedicamentos as $medicamento)
+                @foreach($historiales as $medicamento)
                     <tr>
-                        <td>{{ $medicamento->medicamento->nombre }}</td>
+                        <td>{{ $medicamento->medicamento ? $medicamento->medicamento->Nombre : 'No especificado' }}</td>
                         <td>{{ $medicamento->descripcion_tratamiento }}</td>
                         <td>{{ $medicamento->dosis }}</td>
                         <td>{{ $medicamento->fecha_inicio }}</td>
                         <td>{{ $medicamento->fecha_final }}</td>
-                        <td>{{ $medicamento->estado->nombre ?? 'Sin estado' }}</td>
+                        <td>{{ $medicamento->estado ? $medicamento->estado->Valor1 : 'No especificado' }}</td>
                         <td>
                             <a href="{{ route('historial_medicamentos.edit', $medicamento->id) }}" class="btn btn-warning">
                                 Editar
                             </a>
-                            <form action="{{ route('historial_medicamentos.destroy', $medicamento->id) }}" method="POST" style="display:inline-block;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este historial?');">
-                                    Eliminar
-                                </button>
-                            </form>
                         </td>
                     </tr>
                 @endforeach

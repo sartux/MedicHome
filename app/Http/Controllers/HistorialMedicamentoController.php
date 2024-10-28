@@ -10,17 +10,27 @@ use Illuminate\Http\Request;
 
 class HistorialMedicamentoController extends Controller
 {
+    // public function index()
+    // {
+    //     $historiales = HistorialMedicamento::with('familiar', 'medicamento', 'estado')->get();
+    //     return view('historial_medicamentos.index', compact('historiales'));
+    // }
+
     public function index()
-    {
-        $historiales = HistorialMedicamento::with('familiar', 'medicamento', 'estado')->get();
-        return view('historial_medicamentos.index', compact('historiales'));
-    }
+{
+    $familiar = Familiar::findOrFail(request()->familiar_id); // Recibe el ID del familiar desde la URL
+    $historiales = HistorialMedicamento::with('medicamento', 'estado')
+                   ->where('Familiar_id', $familiar->id)
+                   ->get();
+
+    return view('historial_medicamentos.index', compact('historiales', 'familiar'));
+}
 
     public function create()
     {
         $familiares = Familiar::all();
         $medicamentos = Medicamento::all();
-        $estados = ValorCatalogo::where('catalogos_Codigo', '=', 'CODIGO_ESTADO')->get(); // Reemplaza 'CODIGO_ESTADO' con el código real
+        $estados = ValorCatalogo::where('catalogos_Codigo', '=', 'CATALOGOS_CODIGO_ESTADO')->get(); // Reemplaza 'CATALOGOS_CODIGO_ESTADO' con el código real
 
         return view('historial_medicamentos.create', compact('familiares', 'medicamentos', 'estados'));
     }
@@ -45,7 +55,7 @@ class HistorialMedicamentoController extends Controller
     {
         $familiares = Familiar::all();
         $medicamentos = Medicamento::all();
-        $estados = ValorCatalogo::where('catalogos_Codigo', '=', 'CODIGO_ESTADO')->get(); // Reemplaza 'CODIGO_ESTADO' con el código real
+        $estados = ValorCatalogo::where('catalogos_Codigo', '=', 'CATALOGOS_CODIGO_ESTADO')->get(); // Reemplaza 'CATALOGOS_CODIGO_ESTADO' con el código real
 
         return view('historial_medicamentos.edit', compact('historialMedicamento', 'familiares', 'medicamentos', 'estados'));
     }

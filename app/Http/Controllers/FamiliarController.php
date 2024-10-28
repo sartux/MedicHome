@@ -22,9 +22,8 @@ class FamiliarController extends Controller
     public function create()
     {
         // Cargar los valores de géneros y estados
-        $generos = ValorCatalogo::where('catalogos_id', env('CATALOGOS_ID_GENERO'))->get();
-        $estados = ValorCatalogo::where('catalogos_id', env('CATALOGOS_ID_ESTADO'))->get();
-        return view('familiares.create', compact('generos','estados'));
+        $estados = ValorCatalogo::where('catalogos_Codigo', env('CATALOGOS_CODIGO_ESTADO'))->get();
+        return view('familiares.create', compact('estados'));
     }
 
     public function store(Request $request)
@@ -33,7 +32,7 @@ class FamiliarController extends Controller
             'nombre' => 'required|max:40',
             'apellido' => 'required|max:40',
             'fecha_nacimiento' => 'required|date',
-            'CATA_genero' => 'required|integer',
+            // 'CATA_genero' => 'required|integer',
             'correo' => 'required|max:40|email',
             'telefono' => 'required|max:11',
             'CATA_Estado' => 'required|integer',
@@ -45,7 +44,8 @@ class FamiliarController extends Controller
 
     public function edit(Familiar $familiare)
 {
-    $estados = ValorCatalogo::where('catalogos_id', env('CATALOGOS_ID_ESTADO'))->get(); 
+    // $familiares = Familiar::with('estado')->get();  
+    $estados = ValorCatalogo::where('catalogos_Codigo', env('CATALOGOS_CODIGO_ESTADO'))->get(); 
     return view('familiares.edit', compact('familiare', 'estados'));
 }
 
@@ -55,19 +55,22 @@ public function update(Request $request, Familiar $familiare)
     $request->validate([
         'correo' => 'required|email|max:255',
         'telefono' => 'required|string|max:20',
-        'CATA_Estado' => 'required|exists:valor_catalogos,id',
-        // 'CATA_Estado' => 'required|exists:estados,id',
+        'CATA_Estado' => 'required|exists:valor_catalogos,Codigo',  // valida el id en vez del Codigo
     ]);
+
+    // Obtener el Codigo correspondiente al id seleccionado
+    $estado = ValorCatalogo::findOrFail($request->CATA_Estado);
 
     // Actualizar solo los campos editables
     $familiare->update([
         'correo' => $request->correo,
         'telefono' => $request->telefono,
-        'CATA_Estado' => $request->CATA_Estado,
+        'CATA_Estado' => $estado->Codigo,  // Almacena el Codigo en CATA_Estado
     ]);
 
     return redirect()->route('familiares.index')->with('success', 'Familiar actualizado correctamente');
 }
+
 
 public function medicamentos(Familiar $familiar)
 {

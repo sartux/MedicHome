@@ -69,4 +69,6 @@ Route::get('familiares/{familiar}/ordenes', [CitasMedicasController::class, 'ind
 
 Route::get('historial_medicamentos/{historialMedicamento}', [HistorialMedicamentoController::class, 'show'])->name('historial_medicamentos.show');
 
+// Redirigir la ruta de medicamentos para un familiar específico al controlador correcto
+Route::get('familiares/{familiar}/medicamentos', [HistorialMedicamentoController::class, 'index'])->name('familiares.medicamentos');
 

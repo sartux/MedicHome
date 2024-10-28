@@ -51,13 +51,17 @@
                 <select name="CATA_Estado" id="CATA_Estado" class="border rounded w-full py-2 px-3" required>
                     <option value="">Seleccione el estado</option>
                     @foreach($estados as $estado)
-                        <option value="{{ $estado->id }}" {{ old('CATA_Estado', $familiare->CATA_Estado) == $estado->id ? 'selected' : '' }}>
+                        <option value="{{ $estado->id }}" 
+                            option value="{{ $estado->Codigo }}" {{ old('CATA_Estado', $familiare->CATA_Estado) == $estado->Codigo ? 'selected' : '' }}>
                             {{ $estado->Valor1 }}
                         </option>
                     @endforeach
                 </select>
-                @error('CATA_Estado') <p class="text-red-500">{{ $message }}</p> @enderror
+                @error('CATA_Estado') 
+                    <p class="text-red-500">{{ $message }}</p> 
+                @enderror
             </div>
+
 
             <!-- Botón de actualización -->
             <div class="mb-4">
