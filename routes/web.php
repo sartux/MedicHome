@@ -12,6 +12,8 @@ use App\Http\Controllers\CitasMedicasController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\DashboardController;
 
+use App\Models\OrdenMedica;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -58,17 +60,14 @@ require __DIR__.'/auth.php';
 // familiares
 
 Route::put('/familiares/{familiar}', [FamiliarController::class, 'update'])->name('familiares.update');
-Route::get('familiares/{familiar}/medicamentos', [FamiliarController::class, 'medicamentos'])->name('familiares.medicamentos');
+Route::get('/familiares/{familiar}/medicamentos', [FamiliarController::class, 'medicamentos'])->name('familiares.medicamentos');
+
+// Route::get('/familiares/{familiar}/medicamentos', [HistorialMedicamentoController::class, 'index'])->name('familiares.medicamentos');
+
 // Ruta para acceder a las citas de un familiar
 Route::get('familiares/{familiar}/citas', [CitasMedicasController::class, 'index'])->name('familiares.citas');
 
 // Ruta para gestionar las órdenes
-Route::get('familiares/{familiar}/ordenes', [CitasMedicasController::class, 'index'])->name('familiares.ordenes');
+Route::get('familiares/{familiar}/ordenesMedicas', [FamiliarController::class, 'ordenesMedicas'])->name('familiares.ordenesMedicas');
 
-
-
-Route::get('historial_medicamentos/{historialMedicamento}', [HistorialMedicamentoController::class, 'show'])->name('historial_medicamentos.show');
-
-// Redirigir la ruta de medicamentos para un familiar específico al controlador correcto
-Route::get('familiares/{familiar}/medicamentos', [HistorialMedicamentoController::class, 'index'])->name('familiares.medicamentos');
-
+// Route::get('historial_medicamentos/{historialMedicamento}', [HistorialMedicamentoController::class, 'show'])->name('historial_medicamentos.show');

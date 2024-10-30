@@ -27,12 +27,14 @@
                         {{ __('Familia') }}
                     </x-nav-link>
                     <ul class="absolute hidden bg-white shadow-lg rounded mt-2 min-w-max py-1 z-10 transition ease-in-out duration-150 delay-75">
-                        <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{{ route('familiares.index') }}">Ver Familiares</a></li>
-                        <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{{ route('familiares.create') }}">Agregar Familiar</a></li>
+                        <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{{ route('familiares.index') }}">Familiares</a></li>
+                        <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="#">Medicamentos</a></li>
+                        <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="#">Ordenes</a></li>
+                        <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="#">Citas</a></li>
                     </ul>
                 </li>
 
-                <li class="relative group">
+                {{-- <li class="relative group">
                     <x-nav-link href="#" class="inline-flex items-center">
                         {{ __('Medicamentos') }}
                     </x-nav-link>
@@ -40,7 +42,7 @@
                         <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{{ route('medicamentos.index') }}">Ver Medicamentos</a></li>
                         <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{{ route('medicamentos.create') }}">Agregar Medicamento</a></li>
                     </ul>
-                </li>
+                </li> --}}
 
                 <li class="relative group">
                     <x-nav-link href="#" class="inline-flex items-center">
@@ -51,6 +53,7 @@
                         <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="#">Perfiles</a></li>
                         <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="#">Servicios</a></li>
                         <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="#">Catálogos</a></li>
+                        <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{{ route('medicamentos.index') }}">Medicamentos</a></li>
                     </ul>
                 </li>
             </ul>

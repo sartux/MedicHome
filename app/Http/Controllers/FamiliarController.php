@@ -72,12 +72,21 @@ public function update(Request $request, Familiar $familiare)
 }
 
 
+// public function medicamentos(Familiar $familiar)
+// {
+
+//     $historialMedicamentos = $familiar->historialMedicamentos;
+
+//     return view('historial_medicamentos.show', compact('familiar', 'historialMedicamentos'));
+// }
 public function medicamentos(Familiar $familiar)
 {
-    // Asumiendo que tienes una relación `historialMedicamentos` en el modelo Familiar
     $historialMedicamentos = $familiar->historialMedicamentos;
-
-    return view('historial_medicamentos.index', compact('familiar', 'historialMedicamentos'));
+    return view('historial_medicamentos.show', compact('familiar', 'historialMedicamentos'));
 }
-
+public function ordenesMedicas(Familiar $familiar)
+{
+    $ordenes = $familiar->ordenes;
+    return view('historial_medicamentos.show', compact('familiar', 'historialMedicamentos'));
+}
 }

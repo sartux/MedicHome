@@ -45,6 +45,7 @@
                 @endforeach
             </select>
         </div>
+        <br>
         <button type="submit" class="btn btn-primary">Guardar</button>
     </form>
 </div>

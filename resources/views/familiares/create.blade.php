@@ -28,7 +28,7 @@
                 @error('fecha_nacimiento') <p class="text-red-500">{{ $message }}</p> @enderror
             </div>
 
-            <div class="mb-4">
+            {{-- <div class="mb-4">
                 <label for="CATA_genero" class="block text-gray-700">Género</label>
                 <select name="CATA_genero" id="CATA_genero" class="border rounded w-full py-2 px-3" required>
                     <option value="">Seleccione el género</option>
@@ -39,9 +39,7 @@
                     @endforeach
                 </select>
                 @error('CATA_genero') <p class="text-red-500">{{ $message }}</p> @enderror
-            </div>
-
-
+            </div> --}}
 
             <div class="mb-4">
                 <label for="correo" class="block text-gray-700">Correo</label>

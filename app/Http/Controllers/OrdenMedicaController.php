@@ -7,7 +7,7 @@ use App\Models\Familiar;
 use App\Models\ValorCatalogo;
 use Illuminate\Http\Request;
 
-class OrdenesMedicasController extends Controller
+class OrdenMedicaController extends Controller
 {
     public function index()
     {
@@ -72,4 +72,11 @@ class OrdenesMedicasController extends Controller
         $orden->delete();
         return redirect()->route('ordenes.index')->with('success', 'Orden médica eliminada exitosamente.');
     }
+
+    public function show()
+    {
+        $familiares = Familiar::with('ordenes')->get();
+        return view('ordenes.show', compact('familiares'));
+    }
+    
 }

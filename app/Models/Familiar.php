@@ -34,4 +34,5 @@ protected $table = 'familiares';
             return $this->belongsTo(ValorCatalogo::class, 'CATA_Estado','Codigo');
         }
         
+        
 }
