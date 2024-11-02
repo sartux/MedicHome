@@ -84,9 +84,15 @@ public function medicamentos(Familiar $familiar)
     $historialMedicamentos = $familiar->historialMedicamentos;
     return view('historial_medicamentos.show', compact('familiar', 'historialMedicamentos'));
 }
+// public function ordenesMedicas(Familiar $familiar)
+// {
+//     $ordenes = $familiar->ordenes;
+//     return view('historial_medicamentos.show', compact('familiar', 'historialMedicamentos'));
+// }
 public function ordenesMedicas(Familiar $familiar)
 {
-    $ordenes = $familiar->ordenes;
-    return view('historial_medicamentos.show', compact('familiar', 'historialMedicamentos'));
+    $ordenes = $familiar->ordenesMedicas; // Asegúrate de tener la relación correcta en tu modelo Familiar
+    return view('ordenes.show', compact('familiar', 'ordenes'));
 }
+
 }

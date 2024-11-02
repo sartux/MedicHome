@@ -11,6 +11,7 @@ use App\Http\Controllers\HistorialMedicamentoController;
 use App\Http\Controllers\CitasMedicasController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OrdenMedicaController;
 
 use App\Models\OrdenMedica;
 
@@ -31,6 +32,8 @@ Route::resource('valor_catalogos', ValorCatalogoController::class);
 Route::resource('medicamentos', MedicamentoController::class);
 Route::resource('historial_medicamentos', HistorialMedicamentoController::class);
 Route::resource('ordenes.citas', CitasMedicasController::class);
+Route::resource('ordenes', OrdenMedicaController::class);
+
 
 Route::resource('documentos', DocumentoController::class);
 
