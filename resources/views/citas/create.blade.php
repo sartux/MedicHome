@@ -2,31 +2,23 @@
 
 @section('content')
 <div class="container">
-    <h1>Agregar Cita Médica</h1>
-    <form action="{{ route('citas.store', $orden) }}" method="POST">
+    <h2>Asignar Cita para la Orden ID: {{ $orden->id }}</h2>
+
+    <form action="{{ route('citas.store') }}" method="POST">
         @csrf
-
+        <input type="hidden" name="orden_medica_id" value="{{ $orden->id }}">
+        
         <div class="mb-3">
-            <label for="Fecha_Cita" class="form-label">Fecha</label>
-            <input type="date" class="form-control" name="Fecha_Cita" required>
+            <label for="fecha_hora" class="form-label">Fecha y Hora</label>
+            <input type="datetime-local" name="fecha_hora" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="observaciones" class="form-label">Observaciones</label>
+            <textarea name="observaciones" class="form-control"></textarea>
         </div>
 
-        <div class="mb-3">
-            <label for="Hora_Cita" class="form-label">Hora</label>
-            <input type="time" class="form-control" name="Hora_Cita" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="Lugar" class="form-label">Lugar</label>
-            <input type="text" class="form-control" name="Lugar" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="Observaciones" class="form-label">Observaciones</label>
-            <input type="text" class="form-control" name="Observaciones">
-        </div>
-
-        <button type="submit" class="btn btn-primary">Agregar Cita Médica</button>
+        <button type="submit" class="btn btn-primary">Asignar Cita</button>
     </form>
 </div>
 @endsection

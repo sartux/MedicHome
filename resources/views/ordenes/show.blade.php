@@ -21,7 +21,8 @@
                 <p class="card-text">Pre-Requisitos: {{ $orden->Pre_requisitos }}</p>
                 <p class="card-text"><strong>Estado:</strong> {{ $orden->estado->Valor1 ?? 'Sin estado' }}</p>
                 <br>
-                <a href="#" class="btn btn-primary">Asignar Cita</a>
+                {{-- <a href="#" class="btn btn-primary">Asignar Cita</a> --}}
+                <a href="{{ route('ordenes.citas.create', $orden->id) }}" class="btn btn-primary">Asignar Cita</a>
             </div>
         </div>
         @endforeach

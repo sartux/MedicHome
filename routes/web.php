@@ -41,6 +41,13 @@ Route::put('ordenes/{orden}', [OrdenMedicaController::class, 'update'])->name('o
 Route::delete('ordenes/{orden}', [OrdenMedicaController::class, 'destroy'])->name('ordenes.destroy');
 
 Route::resource('ordenes.citas', CitasMedicasController::class);
+// Rutas para citas médicas
+Route::get('familiares/{familiar}/citas', [CitasMedicasController::class, 'index'])->name('familiares.citas');
+Route::get('ordenes/{orden}/citas/create', [CitasMedicasController::class, 'create'])->name('ordenes.citas.create');
+Route::post('citas', [CitasMedicasController::class, 'store'])->name('citas.store');
+
+// Añadir más rutas según sea necesario para editar, mostrar o eliminar citas
+
 
 
 Route::resource('documentos', DocumentoController::class);

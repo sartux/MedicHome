@@ -41,7 +41,7 @@
                             <a href="{{ route('familiares.ordenesMedicas', $familiar) }}" class="btn btn-success">
                                 <i class="fa-solid fa-file-invoice"></i> Ordenes
                             </a>
-                            <a href="{{ route('familiares.citas', $familiar) }}" class="btn btn-success">
+                            <a href="{{ route('familiares.citas', $familiar->id) }}" class="btn btn-success">
                                 <i class="fa-solid fa-stethoscope"></i> Citas
                             </a>
                         </td>

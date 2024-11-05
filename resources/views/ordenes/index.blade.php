@@ -28,6 +28,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Eliminar</button>
+                            <a href="{{ route('ordenes.citas.create', $orden->id) }}" class="btn btn-success">Asignar Cita</a>
                         </form>
                     </td>
                 </tr>
