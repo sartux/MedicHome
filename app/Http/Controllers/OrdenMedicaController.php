@@ -15,33 +15,43 @@ class OrdenMedicaController extends Controller
         return view('ordenes.index', compact('ordenes'));
     }
 
+
     public function create()
-    {
-        $familiares = Familiar::all();
-        $especialidades = ValorCatalogo::where('catalogos_Codigo', 5)->get(); // Especialidades
-        $estados = ValorCatalogo::where('catalogos_Codigo', 4)->get(); // Estados
-        return view('ordenes.create', compact('familiares', 'especialidades', 'estados'));
-    }
+{
+    $familiares = Familiar::all();
+    
+    // Usamos las constantes de .env para obtener los valores de especialidades y estados
+    $especialidades = ValorCatalogo::where('catalogos_Codigo', env('CATALOGOS_CODIGO_ESPECIALIDAD'))->get();
+    $estados = ValorCatalogo::where('catalogos_Codigo', env('CATALOGOS_CODIGO_ESTADO'))->get();
+    
+    return view('ordenes.create', compact('familiares', 'especialidades', 'estados'));
+}
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'Familiar_id' => 'required|exists:familiares,id',
-            'CATA_Especialidad' => 'required|exists:valor_catalogos,Codigo',
-            'Procedimiento' => 'required|string|max:300',
-            'Fecha_Resetada' => 'required|date',
-            'Medico_Reseta' => 'required|string|max:60',
-            'Centro_Medico' => 'required|string|max:60',
-            'Ciudad' => 'required|string|max:50',
-            'Observaciones' => 'nullable|string|max:400',
-            'CATA_Estado' => 'required|exists:valor_catalogos,Codigo',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'Familiar_id' => 'required|exists:familiares,id',
+        'CATA_Especialidad' => 'required|exists:valor_catalogos,Codigo',
+        'Procedimiento' => 'required|string|max:300',
+        'Fecha_Resetada' => 'required|date',
+        'Medico_Reseta' => 'required|string|max:60',
+        'Centro_Medico' => 'required|string|max:60',
+        'Ciudad' => 'required|string|max:50',
+        'Observaciones' => 'nullable|string|max:400',
+        'Pre_requisitos' => 'nullable|string|max:400',
+        'CATA_Estado' => 'required|exists:valor_catalogos,Codigo',
+    ]);
 
-        OrdenMedica::create($request->all());
-        return redirect()->route('ordenes.index')->with('success', 'Orden médica creada exitosamente.');
-    }
+    // Revisar los datos recibidos
+    // dd($request->all());
 
-    public function edit(OrdenMedica $orden)
+    OrdenMedica::create($request->all());
+
+    return redirect()->route('ordenes.index')->with('success', 'Orden médica creada exitosamente.');
+}
+
+
+      public function edit(OrdenMedica $orden)
     {
         $familiares = Familiar::all();
         $especialidades = ValorCatalogo::where('catalogos_Codigo', 5)->get();
@@ -50,22 +60,23 @@ class OrdenMedicaController extends Controller
     }
 
     public function update(Request $request, OrdenMedica $orden)
-    {
-        $request->validate([
-            'Familiar_id' => 'required|exists:familiares,id',
-            'CATA_Especialidad' => 'required|exists:valor_catalogos,Codigo',
-            'Procedimiento' => 'required|string|max:300',
-            'Fecha_Resetada' => 'required|date',
-            'Medico_Reseta' => 'required|string|max:60',
-            'Centro_Medico' => 'required|string|max:60',
-            'Ciudad' => 'required|string|max:50',
-            'Observaciones' => 'nullable|string|max:400',
-            'CATA_Estado' => 'required|exists:valor_catalogos,Codigo',
-        ]);
+{
+    $request->validate([
+        'Familiar_id' => 'required|exists:familiares,id',
+        'CATA_Especialidad' => 'required|exists:valor_catalogos,Codigo',
+        'Procedimiento' => 'required|string|max:300',
+        'Fecha_Resetada' => 'required|date',
+        'Medico_Reseta' => 'required|string|max:60',
+        'Centro_Medico' => 'required|string|max:60',
+        'Ciudad' => 'required|string|max:50',
+        'Observaciones' => 'nullable|string|max:400',
+        'CATA_Estado' => 'required|exists:valor_catalogos,Codigo',
+    ]);
 
-        $orden->update($request->all());
-        return redirect()->route('ordenes.index')->with('success', 'Orden médica actualizada exitosamente.');
-    }
+    $orden->update($request->all());
+    return redirect()->route('ordenes.index')->with('success', 'Orden médica actualizada exitosamente.');
+}
+
 
     public function destroy(OrdenMedica $orden)
     {
@@ -73,10 +84,21 @@ class OrdenMedicaController extends Controller
         return redirect()->route('ordenes.index')->with('success', 'Orden médica eliminada exitosamente.');
     }
 
-    public function show()
+    public function show(OrdenMedica $orden)
     {
-        $familiares = Familiar::with('ordenes')->get();
-        return view('ordenes.show', compact('familiares'));
+        // Carga las órdenes médicas sin citas, en orden de fecha, e incluye las relaciones de familiar, especialidad y estado
+        $ordenes = OrdenMedica::whereDoesntHave('citasMedicas')
+            ->orderBy('Fecha_Resetada', 'asc')
+            ->with(['familiar', 'especialidad', 'estado'])
+            ->get();
+    
+        // Carga el primer familiar relacionado
+        $familiar = $ordenes->first() ? $ordenes->first()->familiar : null;
+    
+        return view('ordenes.show', compact('ordenes', 'familiar'));
     }
+    
+    
+
     
 }

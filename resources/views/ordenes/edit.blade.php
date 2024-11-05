@@ -3,63 +3,87 @@
 @section('content')
 <div class="container">
     <h1>Editar Orden Médica</h1>
-    <form action="{{ route('ordenes.update', $orden) }}" method="POST">
+    <form action="{{ route('ordenes.update', $orden->id) }}" method="POST">
         @csrf
         @method('PUT')
 
-        <div class="mb-3">
-            <label for="Familiar_id" class="form-label">Familiar</label>
-            <select class="form-select" name="Familiar_id" required>
-                @foreach ($familiares as $familiar)
-                    <option value="{{ $familiar->id }}" {{ $orden->Familiar_id == $familiar->id ? 'selected' : '' }}>{{ $familiar->nombre }} {{ $familiar->apellido }}</option>
+        <!-- Selección de Familiar -->
+        <div class="form-group">
+            <label for="Familiar_id">Familiar</label>
+            <select name="Familiar_id" id="Familiar_id" class="form-control" required>
+                <option value="">Seleccione un familiar</option>
+                @foreach($familiares as $familiar)
+                    <option value="{{ $familiar->id }}" {{ $familiar->id == $orden->Familiar_id ? 'selected' : '' }}>
+                        {{ $familiar->nombre }}
+                    </option>
                 @endforeach
             </select>
         </div>
 
-        <div class="mb-3">
-            <label for="CATA_Especialidad" class="form-label">Especialidad</label>
-            <select class="form-select" name="CATA_Especialidad" required>
-                @foreach ($especialidades as $especialidad)
-                    <option value="{{ $especialidad->Codigo }}" {{ $orden->CATA_Especialidad == $especialidad->Codigo ? 'selected' : '' }}>{{ $especialidad->Valor1 }}</option>
+        <!-- Selección de Especialidad -->
+        <div class="form-group">
+            <label for="CATA_Especialidad">Especialidad</label>
+            <select name="CATA_Especialidad" id="CATA_Especialidad" class="form-control" required>
+                <option value="">Seleccione una especialidad</option>
+                @foreach($especialidades as $especialidad)
+                    <option value="{{ $especialidad->Codigo }}" {{ $especialidad->Codigo == $orden->CATA_Especialidad ? 'selected' : '' }}>
+                        {{ $especialidad->Valor1 }}
+                    </option>
                 @endforeach
             </select>
         </div>
 
-        <div class="mb-3">
-            <label for="Procedimiento" class="form-label">Procedimiento</label>
-            <input type="text" class="form-control" name="Procedimiento" value="{{ $orden->Procedimiento }}" required>
+        <!-- Procedimiento -->
+        <div class="form-group">
+            <label for="Procedimiento">Procedimiento</label>
+            <input type="text" name="Procedimiento" id="Procedimiento" class="form-control" maxlength="300" required value="{{ $orden->Procedimiento }}">
         </div>
 
-        <div class="mb-3">
-            <label for="Fecha_Resetada" class="form-label">Fecha Resetada</label>
-            <input type="date" class="form-control" name="Fecha_Resetada" value="{{ $orden->Fecha_Resetada }}" required>
+        <!-- Fecha de Reseta -->
+        <div class="form-group">
+            <label for="Fecha_Resetada">Fecha Resetada</label>
+            <input type="date" name="Fecha_Resetada" id="Fecha_Resetada" class="form-control" required value="{{ $orden->Fecha_Resetada }}">
         </div>
 
-        <div class="mb-3">
-            <label for="Medico_Reseta" class="form-label">Médico que Reseta</label>
-            <input type="text" class="form-control" name="Medico_Reseta" value="{{ $orden->Medico_Reseta }}" required>
+        <!-- Médico que Reseta -->
+        <div class="form-group">
+            <label for="Medico_Reseta">Médico que Reseta</label>
+            <input type="text" name="Medico_Reseta" id="Medico_Reseta" class="form-control" maxlength="60" required value="{{ $orden->Medico_Reseta }}">
         </div>
 
-        <div class="mb-3">
-            <label for="Centro_Medico" class="form-label">Centro Médico</label>
-            <input type="text" class="form-control" name="Centro_Medico" value="{{ $orden->Centro_Medico }}" required>
+        <!-- Centro Médico -->
+        <div class="form-group">
+            <label for="Centro_Medico">Centro Médico</label>
+            <input type="text" name="Centro_Medico" id="Centro_Medico" class="form-control" maxlength="60" required value="{{ $orden->Centro_Medico }}">
         </div>
 
-        <div class="mb-3">
-            <label for="Ciudad" class="form-label">Ciudad</label>
-            <input type="text" class="form-control" name="Ciudad" value="{{ $orden->Ciudad }}" required>
+        <!-- Ciudad -->
+        <div class="form-group">
+            <label for="Ciudad">Ciudad</label>
+            <input type="text" name="Ciudad" id="Ciudad" class="form-control" maxlength="50" required value="{{ $orden->Ciudad }}">
         </div>
 
-        <div class="mb-3">
-            <label for="Observaciones" class="form-label">Observaciones</label>
-            <input type="text" class="form-control" name="Observaciones" value="{{ $orden->Observaciones }}">
+        <!-- Observaciones -->
+        <div class="form-group">
+            <label for="Observaciones">Observaciones</label>
+            <textarea name="Observaciones" id="Observaciones" class="form-control" maxlength="400">{{ $orden->Observaciones }}</textarea>
         </div>
 
-        <div class="mb-3">
-            <label for="CATA_Estado" class="form-label">Estado</label>
-            <select class="form-select" name="CATA_Estado" required>
-                @foreach ($estados as $estado)
-                    <option value="{{ $estado->Codigo }}" {{ $orden->CATA_Estado == $estado->Codigo ? 'selected' : '' }}>{{ $estado->Valor1 }}</option>
+        <!-- Pre-Requisitos -->
+        <div class="form-group">
+            <label for="Pre_requisitos">Pre-Requisitos</label>
+            <textarea name="Pre_requisitos" id="Pre_requisitos" class="form-control" maxlength="400">{{ $orden->Pre_requisitos }}</textarea>
+        </div>
+
+        <!-- Selección de Estado -->
+        <div class="form-group">
+            <label for="CATA_Estado">Estado</label>
+            <select name="CATA_Estado" id="CATA_Estado" class="form-control" required>
+                <option value="">Seleccione un estado</option>
+                @foreach($estados as $estado)
+                    <option value="{{ $estado->Codigo }}" {{ $estado->Codigo == $orden->CATA_Estado ? 'selected' : '' }}>
+                        {{ $estado->Valor1 }}
+                    </option>
                 @endforeach
             </select>
         </div>

@@ -31,8 +31,16 @@ Route::resource('catalogos', CatalogoController::class);
 Route::resource('valor_catalogos', ValorCatalogoController::class);
 Route::resource('medicamentos', MedicamentoController::class);
 Route::resource('historial_medicamentos', HistorialMedicamentoController::class);
+
+Route::get('ordenes', [OrdenMedicaController::class, 'index'])->name('ordenes.index');
+Route::get('ordenes/create', [OrdenMedicaController::class, 'create'])->name('ordenes.create');
+Route::post('ordenes', [OrdenMedicaController::class, 'store'])->name('ordenes.store');
+Route::get('ordenes/{orden}', [OrdenMedicaController::class, 'show'])->name('ordenes.show');
+Route::get('ordenes/{orden}/edit', [OrdenMedicaController::class, 'edit'])->name('ordenes.edit');
+Route::put('ordenes/{orden}', [OrdenMedicaController::class, 'update'])->name('ordenes.update');
+Route::delete('ordenes/{orden}', [OrdenMedicaController::class, 'destroy'])->name('ordenes.destroy');
+
 Route::resource('ordenes.citas', CitasMedicasController::class);
-Route::resource('ordenes', OrdenMedicaController::class);
 
 
 Route::resource('documentos', DocumentoController::class);

@@ -55,4 +55,10 @@ class CitasMedicasController extends Controller
         $cita->delete();
         return redirect()->route('citas.index', $cita->orden)->with('success', 'Cita médica eliminada exitosamente.');
     }
+    
+    public function show(OrdenMedica $orden, CitaMedica $cita)
+{
+    return view('citas.show', compact('orden', 'cita'));
+}
+
 }
