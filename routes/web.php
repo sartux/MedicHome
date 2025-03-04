@@ -12,6 +12,8 @@ use App\Http\Controllers\OrdenMedicaController;
 use App\Http\Controllers\CitaMedicaController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AlergiaController;
+use App\Http\Controllers\EnfermedadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,8 +60,18 @@ require __DIR__.'/auth.php';
 
 Route::put('/familiares/{familiar}', [FamiliarController::class, 'update'])->name('familiares.update');
 Route::get('familiares/{familiar}/medicamentos', [FamiliarController::class, 'medicamentos'])->name('familiares.medicamentos');
-
+Route::get('familiares/{familiar}', [FamiliarController::class, 'show'])->name('familiares.show');
+Route::get('familiares/{familiar}/edit', [FamiliarController::class, 'edit'])->name('familiares.edit');
 
 Route::get('historial_medicamentos/{historialMedicamento}', [HistorialMedicamentoController::class, 'show'])->name('historial_medicamentos.show');
 
+// Añadir estas líneas junto a las demás rutas resource
+Route::resource('enfermedades', EnfermedadController::class);
+Route::resource('alergias', AlergiaController::class);
 
+// Rutas para gestionar las relaciones
+Route::post('/familiares/{familiar}/enfermedades', [FamiliarController::class, 'agregarEnfermedad'])->name('familiares.agregarEnfermedad');
+Route::delete('/familiares/{familiar}/enfermedades/{enfermedad}', [FamiliarController::class, 'eliminarEnfermedad'])->name('familiares.eliminarEnfermedad');
+
+Route::post('/familiares/{familiar}/alergias', [FamiliarController::class, 'agregarAlergia'])->name('familiares.agregarAlergia');
+Route::delete('/familiares/{familiar}/alergias/{alergia}', [FamiliarController::class, 'eliminarAlergia'])->name('familiares.eliminarAlergia');

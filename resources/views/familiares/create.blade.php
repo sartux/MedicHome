@@ -41,7 +41,18 @@
                 @error('CATA_genero') <p class="text-red-500">{{ $message }}</p> @enderror
             </div>
 
-
+            <div class="mb-4">
+                <label for="CATA_tipo_sangre" class="block text-gray-700">Tipo de Sangre</label>
+                <select name="CATA_tipo_sangre" id="CATA_tipo_sangre" class="border rounded w-full py-2 px-3">
+                    <option value="">Seleccione el tipo de sangre</option>
+                    @foreach($tipos_sangre as $tipo)
+                        <option value="{{ $tipo->id }}" {{ old('CATA_tipo_sangre') == $tipo->id ? 'selected' : '' }}>
+                            {{ $tipo->Valor1 }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('CATA_tipo_sangre') <p class="text-red-500">{{ $message }}</p> @enderror
+            </div>
 
             <div class="mb-4">
                 <label for="correo" class="block text-gray-700">Correo</label>
@@ -54,6 +65,61 @@
                 <input type="text" name="telefono" id="telefono" class="border rounded w-full py-2 px-3" value="{{ old('telefono') }}" required>
                 @error('telefono') <p class="text-red-500">{{ $message }}</p> @enderror
             </div>
+            
+            <div class="mb-4">
+                <label for="contacto_nombre1" class="block text-gray-700">Nombre de Contacto 1</label>
+                <input type="text" name="contacto_nombre1" id="contacto_nombre1" class="border rounded w-full py-2 px-3" value="{{ old('contacto_nombre1') }}">
+                @error('contacto_nombre1') <p class="text-red-500">{{ $message }}</p> @enderror
+            </div>
+            
+            <div class="mb-4">
+                <label for="contacto_telefono1" class="block text-gray-700">Teléfono de Contacto 1</label>
+                <input type="text" name="contacto_telefono1" id="contacto_telefono1" class="border rounded w-full py-2 px-3" value="{{ old('contacto_telefono1') }}">
+                @error('contacto_telefono1') <p class="text-red-500">{{ $message }}</p> @enderror
+            </div>
+            
+            <div class="mb-4">
+                <label for="contacto_nombre2" class="block text-gray-700">Nombre de Contacto 2</label>
+                <input type="text" name="contacto_nombre2" id="contacto_nombre2" class="border rounded w-full py-2 px-3" value="{{ old('contacto_nombre2') }}">
+                @error('contacto_nombre2') <p class="text-red-500">{{ $message }}</p> @enderror
+            </div>
+            
+            <div class="mb-4">
+                <label for="contacto_telefono2" class="block text-gray-700">Teléfono de Contacto 2</label>
+                <input type="text" name="contacto_telefono2" id="contacto_telefono2" class="border rounded w-full py-2 px-3" value="{{ old('contacto_telefono2') }}">
+                @error('contacto_telefono2') <p class="text-red-500">{{ $message }}</p> @enderror
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-gray-700">Enfermedades Base</label>
+                <div class="mt-2 ml-4">
+                    @foreach($enfermedades as $enfermedad)
+                        <div class="mb-2">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="enfermedades[]" value="{{ $enfermedad->id }}" class="form-checkbox"
+                                    {{ (is_array(old('enfermedades')) && in_array($enfermedad->id, old('enfermedades'))) ? 'checked' : '' }}>
+                                <span class="ml-2">{{ $enfermedad->nombre }}</span>
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-gray-700">Alergias</label>
+                <div class="mt-2 ml-4">
+                    @foreach($alergias as $alergia)
+                        <div class="mb-2">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="alergias[]" value="{{ $alergia->id }}" class="form-checkbox"
+                                    {{ (is_array(old('alergias')) && in_array($alergia->id, old('alergias'))) ? 'checked' : '' }}>
+                                <span class="ml-2">{{ $alergia->nombre }}</span>
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
             <div class="mb-4">
                 <label for="CATA_Estado" class="block text-gray-700">Estado</label>
                 <select name="CATA_Estado" id="CATA_Estado" class="border rounded w-full py-2 px-3" required>
@@ -66,8 +132,10 @@
                 </select>
                 @error('CATA_Estado') <p class="text-red-500">{{ $message }}</p> @enderror
             </div>
+            
             <div class="mb-4">
                 <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">Guardar</button>
+                <a href="{{ route('familiares.index') }}" class="bg-gray-500 text-white py-2 px-4 rounded ml-2">Cancelar</a>
             </div>
         </form>
     </div>

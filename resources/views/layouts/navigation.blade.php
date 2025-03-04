@@ -51,6 +51,16 @@
                         <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="#">Perfiles</a></li>
                         <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="#">Servicios</a></li>
                         <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="#">Catálogos</a></li>
+                        <li class="relative group">
+                            <x-nav-link href="#" class="inline-flex items-center">
+                                {{ __('Catálogos Médicos') }}
+                                <svg class="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path d="M5.23 7.21a.75.75 0 011.07.02L10 10.878l3.7-3.666a.75.75 0 011.074 1.048l-4.27 4.233a.75.75 0 01-1.074 0L5.23 8.28a.75.75 0 01.02-1.07z"></path></svg>
+                            </x-nav-link>
+                            <ul class="absolute hidden bg-white shadow-lg rounded mt-2 min-w-max py-1 z-10 transition ease-in-out duration-150 delay-75">
+                                <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{{ route('enfermedades.index') }}">Enfermedades Base</a></li>
+                                <li><a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="{{ route('alergias.index') }}">Alergias</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
             </ul>
