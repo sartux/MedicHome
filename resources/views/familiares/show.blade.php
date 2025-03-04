@@ -97,8 +97,7 @@
         
         <!-- Botones de acción -->
         <div class="flex space-x-4">
-            {{-- <a href="{{ route('familiares.edit', $familiar) }}" class="bg-blue-500 text-white py-2 px-4 rounded">Editar</a> --}}
-            <a href="{{ route('familiares.edit', ['familiar' => $familiar->id]) }}" class="bg-blue-500 text-white py-2 px-4 rounded">Editar</a>
+            <a href="{{ route('familiares.edit', $familiar) }}" class="bg-blue-500 text-white py-2 px-4 rounded">Editar</a>
             <a href="{{ route('familiares.index') }}" class="bg-gray-500 text-white py-2 px-4 rounded">Volver</a>
             <a href="{{ route('familiares.medicamentos', $familiar) }}" class="bg-green-500 text-white py-2 px-4 rounded">Ver Medicamentos</a>
         </div>

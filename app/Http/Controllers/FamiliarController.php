@@ -67,16 +67,16 @@ class FamiliarController extends Controller
             ->with('success', 'Familiar creado exitosamente.');
     }
 
-    public function edit(Familiar $familiare)
+    public function edit($id)
     {
+        $familiare = Familiar::findOrFail($id);
+        
         $estados = ValorCatalogo::where('catalogos_Codigo', env('CATALOGOS_ID_ESTADO'))->get();
         $tipos_sangre = ValorCatalogo::where('catalogos_Codigo', env('CATALOGOS_ID_TIPO_SANGRE'))->get();
         
-        // Obtener enfermedades y alergias con las que ya está relacionado el familiar
         $enfermedades = Enfermedad::where('CATA_Estado', 41)->get();
         $alergias = Alergia::where('CATA_Estado', 41)->get();
         
-        // Obtener los IDs de las enfermedades y alergias del familiar
         $enfermedadesSeleccionadas = $familiare->enfermedades->pluck('id')->toArray();
         $alergiasSeleccionadas = $familiare->alergias->pluck('id')->toArray();
         
@@ -91,8 +91,10 @@ class FamiliarController extends Controller
         ));
     }
 
-    public function update(Request $request, Familiar $familiare)
+    public function update(Request $request, $id)
     {
+        $familiare = Familiar::findOrFail($id);
+        
         $validated = $request->validate([
             'correo' => 'required|email|max:255',
             'telefono' => 'required|string|max:20',
@@ -101,9 +103,9 @@ class FamiliarController extends Controller
             'contacto_telefono1' => 'nullable|max:20',
             'contacto_nombre2' => 'nullable|max:100',
             'contacto_telefono2' => 'nullable|max:20',
-            'CATA_Estado' => 'required|exists:valor_catalogos,id',
+            'CATA_Estado' => 'required|exists:valor_catalogos,codigo',
         ]);
-
+    
         $familiare->update($validated);
         
         // Actualizar enfermedades si se ha enviado el campo
@@ -115,7 +117,7 @@ class FamiliarController extends Controller
         if ($request->has('alergias')) {
             $familiare->alergias()->sync($request->alergias);
         }
-
+    
         return redirect()->route('familiares.index')
             ->with('success', 'Familiar actualizado correctamente');
     }
