@@ -30,8 +30,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// API routes
+
+// API routes - Estas rutas están disponibles para AJAX dentro de la aplicación 
 Route::get('/api/medicamentos/{familiarId}', [DashboardController::class, 'getMedicamentosByFamiliar']);
+// Podemos agregar una nueva ruta para obtener estadísticas si se implementa esa función
+Route::get('/api/dashboard/stats', [DashboardController::class, 'getStats']);
 
 // Rutas protegidas por autenticación
 Route::middleware(['auth', 'verified'])->group(function () {

@@ -16,6 +16,10 @@
      <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
      <link rel="alternate icon" href="{{ asset('favicon.ico') }}">
      <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+    
+    <!-- Alpine.js CDN - Agregamos esto para la funcionalidad de contraer/expandir -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
     <!-- Estilos personalizados -->
     <style>
         :root {
@@ -80,6 +84,20 @@
         .sidebar {
             background-color: white;
             border-right: 1px solid #eee;
+        }
+        
+        /* Estilo específico para las secciones plegables */
+        .section-header {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .section-header:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .section-content {
+            transition: all 0.3s ease;
         }
     </style>
 

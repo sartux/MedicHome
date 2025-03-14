@@ -9,13 +9,14 @@ class CitaMedica extends Model
 {
     use HasFactory;
     
-// Especifica el nombre de la tabla si no sigue la convención
-protected $table = 'citas_medicas';
+    // Especifica el nombre de la tabla si no sigue la convención
+    protected $table = 'citas_medicas';
 
     protected $fillable = ['OrdenMedica_id', 'Fecha_Hora_Cita'];
 
+    // Especifica el nombre de la clave foránea
     public function ordenMedica()
     {
-        return $this->belongsTo(OrdenMedica::class);
+        return $this->belongsTo(OrdenMedica::class, 'OrdenMedica_id');
     }
 }
