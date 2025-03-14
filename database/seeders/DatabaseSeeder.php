@@ -13,14 +13,19 @@ class DatabaseSeeder extends Seeder
     {
         // Llama a cada seeder aquí
         $this->call([
+            UserSeeder::class,
             CatalogosSeeder::class,
             ValorCatalogosSeeder::class,
+            TiposSangreSeeder::class,
+            EnfermedadesSeeder::class,
+            AlergiasSeeder::class,
             FamiliarSeeder::class,
             MedicamentosSeeder::class,
             HistorialMedicamentoSeeder::class,
             OrdenMedicaSeeder::class,
             CitaMedicaSeeder::class,
             DocumentosSeeder::class,
+
         ]);
     }
 }

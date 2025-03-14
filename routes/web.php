@@ -8,12 +8,12 @@ use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\ValorCatalogoController;
 use App\Http\Controllers\MedicamentoController;
 use App\Http\Controllers\HistorialMedicamentoController;
-use App\Http\Controllers\CitasMedicasController;
+use App\Http\Controllers\OrdenMedicaController;
+use App\Http\Controllers\CitaMedicaController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\OrdenMedicaController;
-
-use App\Models\OrdenMedica;
+use App\Http\Controllers\AlergiaController;
+use App\Http\Controllers\EnfermedadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,66 +26,50 @@ use App\Models\OrdenMedica;
 |
 */
 
-Route::resource('familiares', FamiliarController::class);
-Route::resource('catalogos', CatalogoController::class);
-Route::resource('valor_catalogos', ValorCatalogoController::class);
-Route::resource('medicamentos', MedicamentoController::class);
-Route::resource('historial_medicamentos', HistorialMedicamentoController::class);
-
-Route::get('ordenes', [OrdenMedicaController::class, 'index'])->name('ordenes.index');
-Route::get('ordenes/create', [OrdenMedicaController::class, 'create'])->name('ordenes.create');
-Route::post('ordenes', [OrdenMedicaController::class, 'store'])->name('ordenes.store');
-Route::get('ordenes/{orden}', [OrdenMedicaController::class, 'show'])->name('ordenes.show');
-Route::get('ordenes/{orden}/edit', [OrdenMedicaController::class, 'edit'])->name('ordenes.edit');
-Route::put('ordenes/{orden}', [OrdenMedicaController::class, 'update'])->name('ordenes.update');
-Route::delete('ordenes/{orden}', [OrdenMedicaController::class, 'destroy'])->name('ordenes.destroy');
-
-Route::resource('ordenes.citas', CitasMedicasController::class);
-// Rutas para citas médicas
-Route::get('familiares/{familiar}/citas', [CitasMedicasController::class, 'index'])->name('familiares.citas');
-Route::get('ordenes/{orden}/citas/create', [CitasMedicasController::class, 'create'])->name('ordenes.citas.create');
-Route::post('citas', [CitasMedicasController::class, 'store'])->name('citas.store');
-
-// Añadir más rutas según sea necesario para editar, mostrar o eliminar citas
-
-
-
-Route::resource('documentos', DocumentoController::class);
-
 Route::get('/', function () {
     return view('welcome');
 });
 
-
-
-
-// Ruta al dashboard usando el DashboardController
-
+// API routes
 Route::get('/api/medicamentos/{familiarId}', [DashboardController::class, 'getMedicamentosByFamiliar']);
 
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
-Route::middleware('auth')->group(function () {
+// Rutas protegidas por autenticación
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Perfil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Familiares - Rutas personalizadas
+    Route::get('familiares/{familiar}', [FamiliarController::class, 'show'])->name('familiares.show');
+    Route::get('familiares/{familiar}/edit', [FamiliarController::class, 'edit'])->name('familiares.edit');
+    Route::put('familiares/{familiar}', [FamiliarController::class, 'update'])->name('familiares.update');
+    Route::get('familiares/{familiar}/medicamentos', [FamiliarController::class, 'medicamentos'])->name('familiares.medicamentos');
+    
+    // Relaciones de Familiares
+    Route::post('/familiares/{familiar}/enfermedades', [FamiliarController::class, 'agregarEnfermedad'])->name('familiares.agregarEnfermedad');
+    Route::delete('/familiares/{familiar}/enfermedades/{enfermedad}', [FamiliarController::class, 'eliminarEnfermedad'])->name('familiares.eliminarEnfermedad');
+    Route::post('/familiares/{familiar}/alergias', [FamiliarController::class, 'agregarAlergia'])->name('familiares.agregarAlergia');
+    Route::delete('/familiares/{familiar}/alergias/{alergia}', [FamiliarController::class, 'eliminarAlergia'])->name('familiares.eliminarAlergia');
+    
+    // Rutas de Historial Medicamentos
+    Route::get('historial_medicamentos/{historialMedicamento}', [HistorialMedicamentoController::class, 'show'])->name('historial_medicamentos.show');
+    
+    // Resources routes - deben estar después de las rutas personalizadas
+    Route::resource('familiares', FamiliarController::class)->except(['show', 'edit', 'update']);
+    Route::resource('medicamentos', MedicamentoController::class);
+    Route::resource('catalogos', CatalogoController::class);
+    Route::resource('valor_catalogos', ValorCatalogoController::class);
+    Route::resource('historial_medicamentos', HistorialMedicamentoController::class)->except(['show']);
+    Route::resource('ordenes_medicas', OrdenMedicaController::class);
+    Route::resource('citas_medicas', CitaMedicaController::class);
+    Route::resource('documentos', DocumentoController::class);
+    Route::resource('enfermedades', EnfermedadController::class);
+    Route::resource('alergias', AlergiaController::class);
 });
 
+// Rutas de autenticación
 require __DIR__.'/auth.php';
-
-// familiares
-
-Route::put('/familiares/{familiar}', [FamiliarController::class, 'update'])->name('familiares.update');
-Route::get('/familiares/{familiar}/medicamentos', [FamiliarController::class, 'medicamentos'])->name('familiares.medicamentos');
-
-// Route::get('/familiares/{familiar}/medicamentos', [HistorialMedicamentoController::class, 'index'])->name('familiares.medicamentos');
-
-// Ruta para acceder a las citas de un familiar
-Route::get('familiares/{familiar}/citas', [CitasMedicasController::class, 'index'])->name('familiares.citas');
-
-// Ruta para gestionar las órdenes
-Route::get('familiares/{familiar}/ordenesMedicas', [FamiliarController::class, 'ordenesMedicas'])->name('familiares.ordenesMedicas');
-
-// Route::get('historial_medicamentos/{historialMedicamento}', [HistorialMedicamentoController::class, 'show'])->name('historial_medicamentos.show');
