@@ -61,6 +61,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Rutas de Historial Medicamentos
     Route::get('historial_medicamentos/{historialMedicamento}', [HistorialMedicamentoController::class, 'show'])->name('historial_medicamentos.show');
     
+    // Rutas para órdenes médicas por familiar
+    Route::get('/familiares/{familiar}/ordenes-medicas', [OrdenMedicaController::class, 'indexByFamiliar'])->name('ordenes_medicas.indexByFamiliar');
+
+    // Rutas de historial
+Route::get('/familiares/{familiar}/historial-medicamentos', [FamiliarController::class, 'historialMedicamentos'])->name('familiares.historialMedicamentos');
+Route::get('/familiares/{familiar}/historial-ordenes', [FamiliarController::class, 'historialOrdenes'])->name('familiares.historialOrdenes');
+
     // Resources routes - deben estar después de las rutas personalizadas
     Route::resource('familiares', FamiliarController::class)->except(['show', 'edit', 'update']);
     Route::resource('medicamentos', MedicamentoController::class);

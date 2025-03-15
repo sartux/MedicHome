@@ -49,11 +49,11 @@ class Familiar extends Model
     }
     
     // Nuevas relaciones
-    public function genero()
-{
-    return $this->belongsTo(ValorCatalogo::class, 'CATA_genero', 'Codigo');
-}
-    
+        public function genero()
+    {
+        return $this->belongsTo(ValorCatalogo::class, 'CATA_genero', 'Codigo');
+    }
+        
     public function tipoSangre()
     {
         return $this->belongsTo(ValorCatalogo::class, 'CATA_tipo_sangre', 'Codigo');

@@ -124,11 +124,53 @@ class FamiliarController extends Controller
     
     public function show(Familiar $familiar)
     {
-        // dd($familiar->id);
-    // Cargar las relaciones necesarias
-    $familiar->load(['estado', 'genero', 'tipoSangre', 'enfermedades', 'alergias']);
-    
-    return view('familiares.show', compact('familiar'));
+        // Cargar las relaciones básicas del familiar
+        $familiar->load(['estado', 'genero', 'tipoSangre', 'enfermedades', 'alergias']);
+        
+        // Cargar medicamentos activos
+        $medicamentosActivosQuery = \App\Models\HistorialMedicamento::where('Familiar_id', $familiar->id)
+            ->where('CATA_Estado', 41) // Activo
+            ->where(function ($query) {
+                // Sin fecha final o fecha final mayor o igual a hoy
+                $query->whereNull('fecha_final')
+                      ->orWhere('fecha_final', '>=', now()->format('Y-m-d'));
+            });
+        
+        // Contar medicamentos antes de ejecutar la consulta
+        $totalMedicamentos = $medicamentosActivosQuery->count();
+        
+        // Ejecutar consulta de medicamentos
+        $medicamentosActivos = $medicamentosActivosQuery
+            ->with(['medicamento', 'estado'])
+            ->orderBy('fecha_inicio', 'desc')
+            ->get();
+        
+        // Cargar órdenes médicas activas con sus citas
+        $ordenesActivasQuery = \App\Models\OrdenMedica::where('Familiar_id', $familiar->id)
+            ->where('CATA_Estado', 41); // Activo
+        
+        // Contar órdenes antes de ejecutar la consulta
+        $totalOrdenes = $ordenesActivasQuery->count();
+        
+        // Ejecutar consulta de órdenes
+        $ordenesActivas = $ordenesActivasQuery
+            ->with(['especialidad', 'estado', 'citasMedicas' => function($query) {
+                $query->orderBy('Fecha_Hora_Cita', 'asc');
+            }])
+            ->orderBy('Fecha_Resetada', 'desc')
+            ->get();
+        
+        // Diagnóstico para depuración
+        $diagnostico = [
+            'id_familiar' => $familiar->id,
+            'total_medicamentos_query' => $totalMedicamentos,
+            'total_medicamentos_resultado' => $medicamentosActivos->count(),
+            'total_ordenes_query' => $totalOrdenes,
+            'total_ordenes_resultado' => $ordenesActivas->count(),
+            'estado_codigo_activo' => 41,
+        ];
+        
+        return view('familiares.show', compact('familiar', 'medicamentosActivos', 'ordenesActivas', 'diagnostico'));
     }
     
     // Métodos para gestionar enfermedades
@@ -175,5 +217,37 @@ class FamiliarController extends Controller
         $familiar->alergias()->detach($alergia->id);
         
         return back()->with('success', 'Alergia eliminada con éxito');
+    }
+
+    public function medicamentos(Familiar $familiar)
+    {
+        // Determinar el filtro por estado
+        $estado = request('estado', 'todos');
+        
+        // Query base
+        $query = \App\Models\HistorialMedicamento::where('Familiar_id', $familiar->id)
+            ->with(['medicamento', 'estado']);
+        
+        // Aplicar filtros de estado
+        if ($estado === 'activos') {
+            $query->where('CATA_Estado', 41) // Activo
+                ->where(function ($q) {
+                    $q->whereNull('fecha_final')
+                      ->orWhere('fecha_final', '>=', now()->format('Y-m-d'));
+                });
+        } elseif ($estado === 'inactivos') {
+            $query->where(function ($q) {
+                $q->where('CATA_Estado', '!=', 41) // No activo
+                  ->orWhere(function ($q2) {
+                      $q2->where('CATA_Estado', 41)
+                         ->where('fecha_final', '<', now()->format('Y-m-d'));
+                  });
+            });
+        }
+        
+        // Ordenar por fecha de inicio (más recientes primero)
+        $historialMedicamentos = $query->orderBy('fecha_inicio', 'desc')->get();
+        
+        return view('familiares.medicamentos', compact('familiar', 'historialMedicamentos'));
     }
 }

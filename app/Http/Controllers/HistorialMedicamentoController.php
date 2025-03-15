@@ -10,27 +10,17 @@ use Illuminate\Http\Request;
 
 class HistorialMedicamentoController extends Controller
 {
-    // public function index()
-    // {
-    //     $historiales = HistorialMedicamento::with('familiar', 'medicamento', 'estado')->get();
-    //     return view('historial_medicamentos.index', compact('historiales'));
-    // }
-
     public function index()
-{
-    $familiar = Familiar::findOrFail(request()->familiar_id); // Recibe el ID del familiar desde la URL
-    $historiales = HistorialMedicamento::with('medicamento', 'estado')
-                   ->where('Familiar_id', $familiar->id)
-                   ->get();
-
-    return view('historial_medicamentos.index', compact('historiales', 'familiar'));
-}
+    {
+        $historiales = HistorialMedicamento::with('familiar', 'medicamento', 'estado')->get();
+        return view('historial_medicamentos.index', compact('historiales'));
+    }
 
     public function create()
     {
         $familiares = Familiar::all();
         $medicamentos = Medicamento::all();
-        $estados = ValorCatalogo::where('catalogos_Codigo', '=', 'CATALOGOS_CODIGO_ESTADO')->get(); // Reemplaza 'CATALOGOS_CODIGO_ESTADO' con el código real
+        $estados = ValorCatalogo::where('catalogos_Codigo', '=', 4)->get(); // 4 es código de estados
 
         return view('historial_medicamentos.create', compact('familiares', 'medicamentos', 'estados'));
     }
@@ -47,15 +37,24 @@ class HistorialMedicamentoController extends Controller
             'CATA_Estado' => 'required|exists:valor_catalogos,Codigo',
         ]);
 
-        HistorialMedicamento::create($request->all());
-        return redirect()->route('historial_medicamentos.index')->with('success', 'Historial de medicamento creado correctamente.');
+        $historial = HistorialMedicamento::create($request->all());
+        
+        // Redireccionar a la vista de medicamentos del familiar
+        return redirect()->route('familiares.medicamentos', $request->Familiar_id)
+            ->with('success', 'Medicamento agregado correctamente al historial.');
+    }
+
+    public function show(HistorialMedicamento $historialMedicamento)
+    {
+        $historialMedicamento->load(['familiar', 'medicamento', 'estado']);
+        return view('historial_medicamentos.show', compact('historialMedicamento'));
     }
 
     public function edit(HistorialMedicamento $historialMedicamento)
     {
         $familiares = Familiar::all();
         $medicamentos = Medicamento::all();
-        $estados = ValorCatalogo::where('catalogos_Codigo', '=', 'CATALOGOS_CODIGO_ESTADO')->get(); // Reemplaza 'CATALOGOS_CODIGO_ESTADO' con el código real
+        $estados = ValorCatalogo::where('catalogos_Codigo', '=', 4)->get(); // 4 es código de estados
 
         return view('historial_medicamentos.edit', compact('historialMedicamento', 'familiares', 'medicamentos', 'estados'));
     }
@@ -73,17 +72,20 @@ class HistorialMedicamentoController extends Controller
         ]);
 
         $historialMedicamento->update($request->all());
-        return redirect()->route('historial_medicamentos.index')->with('success', 'Historial de medicamento actualizado correctamente.');
+        
+        // Redireccionar a la vista de medicamentos del familiar
+        return redirect()->route('familiares.medicamentos', $historialMedicamento->Familiar_id)
+            ->with('success', 'Historial de medicamento actualizado correctamente.');
     }
 
     public function destroy(HistorialMedicamento $historialMedicamento)
     {
+        // Guardar el ID del familiar antes de eliminar para redireccionar
+        $familiarId = $historialMedicamento->Familiar_id;
+        
         $historialMedicamento->delete();
-        return redirect()->route('historial_medicamentos.index')->with('success', 'Historial de medicamento eliminado.');
+        
+        return redirect()->route('familiares.medicamentos', $familiarId)
+            ->with('success', 'Medicamento eliminado del historial.');
     }
-    public function show(HistorialMedicamento $historialMedicamento)
-{
-    return view('historial_medicamentos.show', compact('historialMedicamento'));
-}
-
 }

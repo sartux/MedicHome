@@ -10,10 +10,9 @@ class HistorialMedicamentoSeeder extends Seeder
     public function run()
     {
         DB::table('historial_medicamentos')->insert([
-
             // Medicamentos para Oscar Silvio (ID de Familiar: 1)
             ['Familiar_id' => 1, 'medicamento_id' => 1, 'descripcion_tratamiento' => 'Tratamiento para hipertensión', 'dosis' => '1 tableta diaria', 'fecha_inicio' => '2024-01-01', 'fecha_final' => null, 'CATA_Estado' => 41],
-            ['Familiar_id' => 1, 'medicamento_id' => 2, 'descripcion_tratamiento' => 'Tratamiento para colesterol alto', 'dosis' => '1 cápsula en la mañana', 'fecha_inicio' => '2024-02-01', 'fecha_final' => null, 'CATA_Estado' => 41],
+            ['Familiar_id' => 1, 'medicamento_id' => 2, 'descripcion_tratamiento' => 'Tratamiento para colesterol alto', 'dosis' => '1 cápsula en la mañana', 'fecha_inicio' => '2024-02-01', 'fecha_final' => '2024-03-30', 'CATA_Estado' => 41],
             ['Familiar_id' => 1, 'medicamento_id' => 3, 'descripcion_tratamiento' => 'Suplemento de vitamina D', 'dosis' => '2 tabletas al día', 'fecha_inicio' => '2024-03-01', 'fecha_final' => null, 'CATA_Estado' => 41],
 
             // Medicamentos para Sergio Eduardo (ID de Familiar: 2)
