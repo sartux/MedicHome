@@ -19,6 +19,10 @@ class FamiliarSeeder extends Seeder
                 'CATA_tipo_sangre' => 63,
                 'correo' => 'oscarsa1@gmail.com',
                 'telefono' => '3123487942',
+                'contacto_nombre1' => 'Sergio Eduardo',
+                'contacto_telefono1' => '3213435763',   
+                'contacto_nombre2' => 'Silvia Viviana',
+                'contacto_telefono2' => '3123487942',
                 'CATA_Estado' => 41
             ],
             [
@@ -29,6 +33,10 @@ class FamiliarSeeder extends Seeder
                 'CATA_genero' => 11,
                 'correo' => 'sarboleda@gmail.com',
                 'telefono' => '3213435763',
+                'contacto_nombre1' => 'Silvia Viviana',
+                'contacto_telefono1' => '3123487942',
+                'contacto_nombre2' => 'Oscar Silvio',
+                'contacto_telefono2' => '3123487942',
                 'CATA_Estado' => 41
             ],
             [
@@ -39,6 +47,10 @@ class FamiliarSeeder extends Seeder
                 'CATA_genero' => 12,
                 'correo' => 'bibi@info.com',
                 'telefono' => '333333333',
+                'contacto_nombre1' => 'Oscar Silvio',
+                'contacto_telefono1' => '3123487942',
+                'contacto_nombre2' => 'Sergio Eduardo',
+                'contacto_telefono2' => '3213435763',
                 'CATA_Estado' => 42
             ]
             // Agrega más familiares según sea necesario

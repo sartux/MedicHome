@@ -102,22 +102,62 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
+                    </div>                   
                     <!-- Contactos de emergencia -->
-                    <div class="mb-6">
+                    <div>
                         <h3 class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-3 flex items-center">
                             <i class="fas fa-phone-alt text-green-600 mr-2"></i> Contactos de Emergencia
                         </h3>
                         
-                        @if($familiar->contacto_nombre1 || $familiar->contacto_telefono1 || $familiar->contacto_nombre2 || $familiar->contacto_telefono2)
-                        <!-- Contenido de los contactos -->
-                    @else
-                        <div class="text-center py-6 bg-gray-50 border border-gray-200 rounded-lg">
-                            <i class="fas fa-user-slash text-gray-400 text-3xl mb-2"></i>
-                            <p class="text-gray-500 italic">No hay contactos de emergencia registrados</p>
-                        </div>
-                    @endif
+                        {{-- Depuración específica para contactos --}}
+                        @php
+                            $tieneContactos = !empty($familiar->contacto_nombre1) || 
+                                        !empty($familiar->contacto_telefono1) || 
+                                        !empty($familiar->contacto_nombre2) || 
+                                        !empty($familiar->contacto_telefono2);
+                            
+                            // Depuración de contactos
+                            // echo "Tiene contactos: " . ($tieneContactos ? 'Sí' : 'No') . "<br>";
+                            // echo "Contacto nombre 1: " . $familiar->contacto_nombre1 . "<br>";
+                            // echo "Contacto teléfono 1: " . $familiar->contacto_telefono1 . "<br>";
+                            // echo "Contacto nombre 2: " . $familiar->contacto_nombre2 . "<br>";
+                            // echo "Contacto teléfono 2: " . $familiar->contacto_telefono2 . "<br>";
+                        @endphp
+                        
+                        @if($tieneContactos)
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                @if(!empty($familiar->contacto_nombre1) || !empty($familiar->contacto_telefono1))
+                                    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                                        <h4 class="font-medium text-gray-800 mb-2">Contacto Primario</h4>
+                                        <p class="text-gray-700">{{ $familiar->contacto_nombre1 ?: 'Sin nombre' }}</p>
+                                        @if(!empty($familiar->contacto_telefono1))
+                                            <a href="tel:{{ $familiar->contacto_telefono1 }}" class="text-blue-600 hover:underline flex items-center mt-1">
+                                                <i class="fas fa-phone-alt mr-1"></i>
+                                                {{ $familiar->contacto_telefono1 }}
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endif
+                                
+                                @if(!empty($familiar->contacto_nombre2) || !empty($familiar->contacto_telefono2))
+                                    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                                        <h4 class="font-medium text-gray-800 mb-2">Contacto Secundario</h4>
+                                        <p class="text-gray-700">{{ $familiar->contacto_nombre2 ?: 'Sin nombre' }}</p>
+                                        @if(!empty($familiar->contacto_telefono2))
+                                            <a href="tel:{{ $familiar->contacto_telefono2 }}" class="text-blue-600 hover:underline flex items-center mt-1">
+                                                <i class="fas fa-phone-alt mr-1"></i>
+                                                {{ $familiar->contacto_telefono2 }}
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
+                        @else
+                            <div class="text-center py-6 bg-gray-50 border border-gray-200 rounded-lg">
+                                <i class="fas fa-user-slash text-gray-400 text-3xl mb-2"></i>
+                                <p class="text-gray-500 italic">No hay contactos de emergencia registrados</p>
+                            </div>
+                        @endif
                     </div>
                     
                     <!-- Enfermedades -->
