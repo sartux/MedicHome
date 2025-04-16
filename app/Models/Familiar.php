@@ -9,16 +9,16 @@ use Carbon\Carbon;
 class Familiar extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'familiares';
 
     protected $fillable = [
-        'nombre', 
-        'apellido', 
-        'fecha_nacimiento', 
+        'nombre',
+        'apellido',
+        'fecha_nacimiento',
         'CATA_genero',
         'CATA_tipo_sangre',
-        'correo', 
+        'correo',
         'telefono',
         'contacto_nombre1',
         'contacto_telefono1',
@@ -28,6 +28,11 @@ class Familiar extends Model
     ];
 
     // Métodos de relación existentes
+    public function nucleoFamiliar()
+    {
+        return $this->belongsTo(NucleoFamiliar::class);
+    }
+
     public function historialMedicamentos()
     {
         return $this->hasMany(HistorialMedicamento::class);
@@ -47,38 +52,38 @@ class Familiar extends Model
     {
         return $this->belongsTo(ValorCatalogo::class, 'CATA_Estado', 'Codigo');
     }
-    
+
     // Nuevas relaciones
-        public function genero()
+    public function genero()
     {
         return $this->belongsTo(ValorCatalogo::class, 'CATA_genero', 'Codigo');
     }
-        
+
     public function tipoSangre()
     {
         return $this->belongsTo(ValorCatalogo::class, 'CATA_tipo_sangre', 'Codigo');
     }
-    
+
     public function enfermedades()
     {
         return $this->belongsToMany(Enfermedad::class, 'familiar_enfermedad')
-                    ->withPivot('notas')
-                    ->withTimestamps();
+            ->withPivot('notas')
+            ->withTimestamps();
     }
-    
+
     public function alergias()
     {
         return $this->belongsToMany(Alergia::class, 'familiar_alergia')
-                    ->withPivot('notas')
-                    ->withTimestamps();
+            ->withPivot('notas')
+            ->withTimestamps();
     }
-    
+
     // Método para calcular la edad
     public function getEdadAttribute()
     {
         return Carbon::parse($this->fecha_nacimiento)->age;
     }
-    
+
     // Método para obtener nombre completo
     public function getNombreCompletoAttribute()
     {

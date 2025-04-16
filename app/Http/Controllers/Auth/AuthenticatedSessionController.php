@@ -26,11 +26,24 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
+    
         $request->session()->regenerate();
-
+        
+        // Verificar si el núcleo familiar del usuario está activo
+        $user = auth()->user();
+        if ($user->nucleo_familiar_id && !$user->isSuperAdmin()) {
+            $nucleo = $user->nucleoFamiliar;
+            
+            if (!$nucleo || !$nucleo->isActivo()) {
+                auth()->logout();
+                return redirect()->route('login')
+                    ->with('error', 'El acceso a su núcleo familiar ha sido desactivado. Contacte al administrador.');
+            }
+        }
+    
         return redirect()->intended(RouteServiceProvider::HOME);
     }
+    
 
     /**
      * Destroy an authenticated session.

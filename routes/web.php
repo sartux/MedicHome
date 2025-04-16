@@ -40,33 +40,40 @@ Route::get('/api/dashboard/stats', [DashboardController::class, 'getStats']);
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
+    // Rutas para núcleos familiares (solo accesibles para superadmin)
+    Route::resource('nucleo_familiares', NucleoFamiliarController::class);
+
+    // Actualización de contraseña de administrador de núcleo (ruta opcional)
+    Route::post('nucleo_familiares/{nucleoFamiliar}/reset-admin-password', [NucleoFamiliarController::class, 'resetAdminPassword'])->name('nucleo_familiares.reset_admin_password');
+
+
     // Perfil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     // Familiares - Rutas personalizadas
     Route::get('familiares/{familiar}', [FamiliarController::class, 'show'])->name('familiares.show');
     Route::get('familiares/{familiar}/edit', [FamiliarController::class, 'edit'])->name('familiares.edit');
     Route::put('familiares/{familiar}', [FamiliarController::class, 'update'])->name('familiares.update');
     Route::get('familiares/{familiar}/medicamentos', [FamiliarController::class, 'medicamentos'])->name('familiares.medicamentos');
-    
+
     // Relaciones de Familiares
     Route::post('/familiares/{familiar}/enfermedades', [FamiliarController::class, 'agregarEnfermedad'])->name('familiares.agregarEnfermedad');
     Route::delete('/familiares/{familiar}/enfermedades/{enfermedad}', [FamiliarController::class, 'eliminarEnfermedad'])->name('familiares.eliminarEnfermedad');
     Route::post('/familiares/{familiar}/alergias', [FamiliarController::class, 'agregarAlergia'])->name('familiares.agregarAlergia');
     Route::delete('/familiares/{familiar}/alergias/{alergia}', [FamiliarController::class, 'eliminarAlergia'])->name('familiares.eliminarAlergia');
-    
+
     // Rutas de Historial Medicamentos
     Route::get('historial_medicamentos/{historialMedicamento}', [HistorialMedicamentoController::class, 'show'])->name('historial_medicamentos.show');
-    
+
     // Rutas para órdenes médicas por familiar
     Route::get('/familiares/{familiar}/ordenes-medicas', [OrdenMedicaController::class, 'indexByFamiliar'])->name('ordenes_medicas.indexByFamiliar');
 
     // Rutas de historial
-Route::get('/familiares/{familiar}/historial-medicamentos', [FamiliarController::class, 'historialMedicamentos'])->name('familiares.historialMedicamentos');
-Route::get('/familiares/{familiar}/historial-ordenes', [FamiliarController::class, 'historialOrdenes'])->name('familiares.historialOrdenes');
+    Route::get('/familiares/{familiar}/historial-medicamentos', [FamiliarController::class, 'historialMedicamentos'])->name('familiares.historialMedicamentos');
+    Route::get('/familiares/{familiar}/historial-ordenes', [FamiliarController::class, 'historialOrdenes'])->name('familiares.historialOrdenes');
 
     // Resources routes - deben estar después de las rutas personalizadas
     Route::resource('familiares', FamiliarController::class)->except(['show', 'edit', 'update']);
@@ -82,4 +89,4 @@ Route::get('/familiares/{familiar}/historial-ordenes', [FamiliarController::clas
 });
 
 // Rutas de autenticación
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

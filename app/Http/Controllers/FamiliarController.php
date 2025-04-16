@@ -11,14 +11,23 @@ use Carbon\Carbon;
 
 class FamiliarController extends Controller
 {
-    // Métodos existentes...
-
-    public function index()
-    {
-        // Cargar los familiares con la relación del estado
-        $familiares = Familiar::with(['estado', 'tipoSangre'])->get();  
-        return view('familiares.index', compact('familiares'));
+// Añadir restricción para que sólo se muestren familiares del núcleo del usuario
+public function index()
+{
+    $user = auth()->user();
+    
+    // Si es superadmin, puede ver todos los familiares
+    if ($user->isSuperAdmin()) {
+        $familiares = Familiar::with(['estado', 'tipoSangre', 'nucleoFamiliar'])->get();
+    } else {
+        // Si es admin de núcleo, solo ve los familiares de su núcleo
+        $familiares = Familiar::with(['estado', 'tipoSangre'])
+                        ->where('nucleo_familiar_id', $user->nucleo_familiar_id)
+                        ->get();
     }
+    
+    return view('familiares.index', compact('familiares'));
+}
    
     public function create()
     {
@@ -36,6 +45,18 @@ class FamiliarController extends Controller
 
     public function store(Request $request)
     {
+        $user = auth()->user();
+        $nucleoId = $user->nucleo_familiar_id;
+        
+        // Verificar disponibilidad en el núcleo familiar
+        if (!$user->isSuperAdmin()) {
+            $nucleo = $user->nucleoFamiliar;
+            
+            if (!$nucleo->puedeAgregarFamiliar()) {
+                return redirect()->route('familiares.index')
+                    ->with('error', 'No se pueden agregar más familiares a este núcleo. Límite alcanzado.');
+            }
+        }
         $validated = $request->validate([
             'nombre' => 'required|max:40',
             'apellido' => 'required|max:40',
@@ -50,7 +71,9 @@ class FamiliarController extends Controller
             'contacto_telefono2' => 'nullable|max:20',
             'CATA_Estado' => 'required|integer',
         ]);
-
+        $validated['nucleo_familiar_id'] = $nucleoId;
+    
+        $familiar = Familiar::create($validated);
         $familiar = Familiar::create($validated);
         
         // Añadir enfermedades si se han seleccionado
@@ -69,16 +92,25 @@ class FamiliarController extends Controller
 
     public function edit($id)
     {
-        $familiare = Familiar::findOrFail($id);
+        $familiare = Familiar::with(['estado', 'genero', 'tipoSangre'])->findOrFail($id);
         
-        $estados = ValorCatalogo::where('catalogos_Codigo', env('CATALOGOS_ID_ESTADO'))->get();
-        $tipos_sangre = ValorCatalogo::where('catalogos_Codigo', env('CATALOGOS_ID_TIPO_SANGRE'))->get();
+        // Modificar estas consultas para usar valores fijos si las variables de entorno no están definidas
+        $estados = ValorCatalogo::where('catalogos_Codigo', 4)->get(); // 4 es el código para estados
+        $tipos_sangre = ValorCatalogo::where('catalogos_Codigo', 6)->get(); // 6 es el código para tipos de sangre
         
         $enfermedades = Enfermedad::where('CATA_Estado', 41)->get();
         $alergias = Alergia::where('CATA_Estado', 41)->get();
         
         $enfermedadesSeleccionadas = $familiare->enfermedades->pluck('id')->toArray();
         $alergiasSeleccionadas = $familiare->alergias->pluck('id')->toArray();
+        
+        // Añadir esto para depuración
+        // dd([
+        //     'estados' => $estados->toArray(),
+        //     'tipos_sangre' => $tipos_sangre->toArray(),
+        //     'CATA_Estado' => $familiare->CATA_Estado,
+        //     'CATA_tipo_sangre' => $familiare->CATA_tipo_sangre
+        // ]);
         
         return view('familiares.edit', compact(
             'familiare', 
@@ -98,14 +130,14 @@ class FamiliarController extends Controller
         $validated = $request->validate([
             'correo' => 'required|email|max:255',
             'telefono' => 'required|string|max:20',
-            'CATA_tipo_sangre' => 'nullable|integer|exists:valor_catalogos,Codigo,catalogos_Codigo,' . env('CATALOGOS_ID_TIPO_SANGRE'),
+            'CATA_tipo_sangre' => 'nullable|integer|exists:valor_catalogos,Codigo,catalogos_Codigo,' . 6, // Cambio aquí
             'contacto_nombre1' => 'nullable|max:100',
             'contacto_telefono1' => 'nullable|max:20',
             'contacto_nombre2' => 'nullable|max:100',
             'contacto_telefono2' => 'nullable|max:20',
             'CATA_Estado' => 'required|exists:valor_catalogos,codigo',
         ]);
-    
+        
         $familiare->update($validated);
         
         // Actualizar enfermedades si se ha enviado el campo
@@ -117,7 +149,7 @@ class FamiliarController extends Controller
         if ($request->has('alergias')) {
             $familiare->alergias()->sync($request->alergias);
         }
-    
+        
         return redirect()->route('familiares.index')
             ->with('success', 'Familiar actualizado correctamente');
     }
