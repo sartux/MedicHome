@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             OrdenMedicaSeeder::class,
             CitaMedicaSeeder::class,
             DocumentosSeeder::class,
+            SuperAdminSeeder::class,
 
 
         ]);

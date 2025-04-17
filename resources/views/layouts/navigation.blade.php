@@ -80,8 +80,16 @@
                                 </a></li>
                             </ul>
                         </li>
+                        @if(Auth::user()->isSuperAdmin())
+<li class="relative group">
+    <a href="{{ route('nucleo_familiares.index') }}" class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium">
+        <i class="fas fa-home mr-1"></i> Núcleos Familiares
+    </a>
+</li>
+@endif
                     </ul>
                 </li>
+                
             </ul>
 
             <!-- User Dropdown -->

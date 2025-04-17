@@ -285,6 +285,42 @@
         </div>
     </div>
 
+    <!-- Agregar sección para SuperAdmin -->
+@if(Auth::user()->isSuperAdmin() && isset($nucleoInfo))
+<div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+    <div class="bg-blue-600 px-6 py-3">
+        <h3 class="text-lg font-semibold text-white">
+            <i class="fas fa-home mr-2"></i> Estadísticas de Núcleos Familiares
+        </h3>
+    </div>
+    
+    <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-blue-50 p-4 rounded-lg text-center">
+                <div class="text-3xl font-bold text-blue-700 mb-2">{{ $nucleoInfo['total'] }}</div>
+                <div class="text-gray-700">Núcleos Totales</div>
+            </div>
+            
+            <div class="bg-green-50 p-4 rounded-lg text-center">
+                <div class="text-3xl font-bold text-green-700 mb-2">{{ $nucleoInfo['activos'] }}</div>
+                <div class="text-gray-700">Núcleos Activos</div>
+            </div>
+            
+            <div class="bg-red-50 p-4 rounded-lg text-center">
+                <div class="text-3xl font-bold text-red-700 mb-2">{{ $nucleoInfo['inactivos'] }}</div>
+                <div class="text-gray-700">Núcleos Inactivos</div>
+            </div>
+        </div>
+        
+        <div class="mt-4 text-center">
+            <a href="{{ route('nucleo_familiares.index') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors">
+                <i class="fas fa-list mr-2"></i>Ver todos los núcleos
+            </a>
+        </div>
+    </div>
+</div>
+@endif
+
     <script>
         // Script mejorado para filtrar medicamentos
         document.addEventListener('DOMContentLoaded', function() {
