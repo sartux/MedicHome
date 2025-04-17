@@ -20,11 +20,14 @@ class DatabaseSeeder extends Seeder
             EnfermedadesSeeder::class,
             AlergiasSeeder::class,
             FamiliarSeeder::class,
+            FamiliarEnfermedadSeeder::class,
+            FamiliarAlergiaSeeder::class,
             MedicamentosSeeder::class,
             HistorialMedicamentoSeeder::class,
             OrdenMedicaSeeder::class,
             CitaMedicaSeeder::class,
             DocumentosSeeder::class,
+
 
         ]);
     }

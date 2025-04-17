@@ -21,6 +21,18 @@ class EnfermedadesSeeder extends Seeder
             ['nombre' => 'Hipertiroidismo', 'descripcion' => 'Glándula tiroides hiperactiva', 'CATA_Estado' => 41, 'created_at' => now(), 'updated_at' => now()],
             ['nombre' => 'Epilepsia', 'descripcion' => 'Trastorno neurológico', 'CATA_Estado' => 41, 'created_at' => now(), 'updated_at' => now()],
             ['nombre' => 'Enfermedad Renal Crónica', 'descripcion' => 'Insuficiencia renal de largo plazo', 'CATA_Estado' => 41, 'created_at' => now(), 'updated_at' => now()],
+            
+            // Enfermedades adicionales
+            ['nombre' => 'Migraña', 'descripcion' => 'Cefalea intensa y recurrente', 'CATA_Estado' => 41, 'created_at' => now(), 'updated_at' => now()],
+            ['nombre' => 'Fibromialgia', 'descripcion' => 'Dolor musculoesquelético crónico', 'CATA_Estado' => 41, 'created_at' => now(), 'updated_at' => now()],
+            ['nombre' => 'Enfermedad de Crohn', 'descripcion' => 'Enfermedad inflamatoria intestinal', 'CATA_Estado' => 41, 'created_at' => now(), 'updated_at' => now()],
+            ['nombre' => 'Colitis Ulcerosa', 'descripcion' => 'Inflamación crónica del colon', 'CATA_Estado' => 41, 'created_at' => now(), 'updated_at' => now()],
+            ['nombre' => 'Psoriasis', 'descripcion' => 'Enfermedad autoinmune que afecta la piel', 'CATA_Estado' => 41, 'created_at' => now(), 'updated_at' => now()],
+            ['nombre' => 'Lupus Eritematoso Sistémico', 'descripcion' => 'Enfermedad autoinmune multiorgánica', 'CATA_Estado' => 41, 'created_at' => now(), 'updated_at' => now()],
+            ['nombre' => 'Esclerosis Múltiple', 'descripcion' => 'Enfermedad desmielinizante del sistema nervioso', 'CATA_Estado' => 41, 'created_at' => now(), 'updated_at' => now()],
+            ['nombre' => 'EPOC', 'descripcion' => 'Enfermedad Pulmonar Obstructiva Crónica', 'CATA_Estado' => 41, 'created_at' => now(), 'updated_at' => now()],
+            ['nombre' => 'Anemia Ferropénica', 'descripcion' => 'Déficit de hierro en sangre', 'CATA_Estado' => 41, 'created_at' => now(), 'updated_at' => now()],
+            ['nombre' => 'Apnea del Sueño', 'descripcion' => 'Trastorno respiratorio durante el sueño', 'CATA_Estado' => 41, 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

@@ -15,7 +15,7 @@ class CreateFamiliaresTable extends Migration
             $table->date('fecha_nacimiento');
             $table->integer('CATA_genero');
             $table->string('correo', 40);
-            $table->string('telefono', 11);
+            $table->string('telefono', 13);
             $table->integer('CATA_Estado');
             $table->timestamps();
 
