@@ -89,6 +89,9 @@
                                     <a href="{{ route('familiares.medicamentos', $familiar) }}" class="text-green-600 hover:text-green-800 bg-green-100 hover:bg-green-200 p-2 rounded-full transition-colors">
                                         <i class="fas fa-pills"></i>
                                     </a>
+                                    <a href="{{ route('ordenes_medicas.indexByFamiliar', $familiar) }}" class="text-purple-600 hover:text-purple-800 bg-purple-100 hover:bg-purple-200 p-2 rounded-full transition-colors">
+                                        <i class="fas fa-file-medical"></i>
+                                    </a>
                                 </div>
                             </td>
                         </tr>
