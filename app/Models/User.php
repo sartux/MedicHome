@@ -22,8 +22,8 @@ class User extends Authenticatable
         'email',
         'password',
         'nucleo_familiar_id',
-        'is_nucleo_admin',
-        'is_super_admin',
+        'is_admin',
+        'is_superadmin',
     ];
 
     /**
@@ -44,49 +44,34 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'is_nucleo_admin' => 'boolean',
-        'is_super_admin' => 'boolean',
+        'is_admin' => 'boolean',
+        'is_superadmin' => 'boolean',
     ];
-
+    
     /**
-     * Relación con el núcleo familiar al que pertenece el usuario
+     * Relación con el núcleo familiar
      */
     public function nucleoFamiliar()
     {
-        return $this->belongsTo(NucleoFamiliar::class);
+        return $this->belongsTo(NucleoFamiliar::class, 'nucleo_familiar_id');
     }
-
+    
     /**
-     * Verifica si el usuario es superadministrador
+     * Verifica si el usuario puede acceder (núcleo activo)
      */
-    public function isSuperAdmin()
+    public function puedeAcceder()
     {
-        return $this->is_super_admin;
-    }
-
-    /**
-     * Verifica si el usuario es administrador de núcleo
-     */
-    public function isNucleoAdmin()
-    {
-        return $this->is_nucleo_admin;
-    }
-
-    /**
-     * Verifica si el usuario puede acceder a un núcleo específico
-     * 
-     * @param int $nucleoId
-     * @return bool
-     */
-    public function canAccessNucleo($nucleoId)
-    {
-        if ($this->isSuperAdmin()) {
+        // Los superadmins siempre pueden acceder
+        if ($this->is_superadmin) {
             return true;
         }
         
-        return $this->is_nucleo_admin && 
-               $this->nucleo_familiar_id == $nucleoId && 
-               $this->nucleoFamiliar && 
-               $this->nucleoFamiliar->isActivo();
+        // Si no tiene núcleo familiar, no puede acceder
+        if (!$this->nucleo_familiar_id) {
+            return false;
+        }
+        
+        // Solo puede acceder si su núcleo familiar está activo
+        return $this->nucleoFamiliar && $this->nucleoFamiliar->isActivo();
     }
 }

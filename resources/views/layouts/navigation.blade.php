@@ -20,7 +20,14 @@
                         <i class="fas fa-chart-line mr-1"></i> Dashboard
                     </a>
                 </li>
-
+                @if(auth()->user()->is_superadmin)
+                <!-- Núcleos Familiares (Solo para superadmin) -->
+                <li class="relative group">
+                    <a href="{{ route('nucleo_familiares.index') }}" class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium">
+                        <i class="fas fa-users-cog mr-1"></i> Núcleos Familiares
+                    </a>
+                </li>
+            @endif
                 <!-- Dropdown: Familia -->
                 <li class="relative group">
                     <button class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium">
@@ -81,12 +88,7 @@
                             </ul>
                         </li>
                         @if(Auth::user()->isSuperAdmin())
-<li class="relative group">
-    <a href="{{ route('nucleo_familiares.index') }}" class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium">
-        <i class="fas fa-home mr-1"></i> Núcleos Familiares
-    </a>
-</li>
-@endif
+
                     </ul>
                 </li>
                 

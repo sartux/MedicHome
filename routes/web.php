@@ -14,6 +14,8 @@ use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AlergiaController;
 use App\Http\Controllers\EnfermedadController;
+use App\Http\Controllers\NucleoFamiliarController;
+
 
 /*
 |--------------------------------------------------------------------------

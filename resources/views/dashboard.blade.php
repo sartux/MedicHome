@@ -127,7 +127,71 @@
                 </div>
             </div>
         </div>
+        @if (auth()->user()->nucleo_familiar_id)
+            <!-- Información del Núcleo Familiar -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6" x-data="{ expanded: true }">
+                <div class="flex justify-between items-center cursor-pointer" @click="expanded = !expanded">
+                    <h2 class="text-xl font-semibold text-gray-800">
+                        <i class="fas fa-users-cog text-indigo-600 mr-2"></i>Mi Núcleo Familiar:
+                        {{ auth()->user()->nucleoFamiliar->nombre }}
+                    </h2>
+                    <button class="text-gray-500 hover:text-indigo-600 focus:outline-none transition-colors">
+                        <i class="fas" :class="expanded ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    </button>
+                </div>
 
+                <div x-show="expanded" x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0 transform -translate-y-2"
+                    x-transition:enter-end="opacity-100 transform translate-y-0"
+                    x-transition:leave="transition ease-in duration-200"
+                    x-transition:leave-start="opacity-100 transform translate-y-0"
+                    x-transition:leave-end="opacity-0 transform -translate-y-2" class="mt-4">
+                    <div class="bg-indigo-50 rounded-lg p-4">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div class="bg-white p-3 rounded-lg shadow-sm text-center">
+                                <p class="text-sm text-gray-600 mb-1">Código</p>
+                                <p class="text-lg font-semibold text-indigo-700">
+                                    {{ auth()->user()->nucleoFamiliar->codigo }}</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow-sm text-center">
+                                <p class="text-sm text-gray-600 mb-1">Familiares</p>
+                                <p class="text-lg font-semibold text-indigo-700">
+                                    {{ auth()->user()->nucleoFamiliar->familiares->count() }} /
+                                    {{ auth()->user()->nucleoFamiliar->cant_familiares }}
+                                </p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow-sm text-center">
+                                <p class="text-sm text-gray-600 mb-1">Creado</p>
+                                <p class="text-lg font-semibold text-indigo-700">
+                                    {{ auth()->user()->nucleoFamiliar->fecha_crea->format('d/m/Y') }}</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow-sm text-center">
+                                <p class="text-sm text-gray-600 mb-1">Estado</p>
+                                <p
+                                    class="text-lg font-semibold {{ auth()->user()->nucleoFamiliar->isActivo() ? 'text-green-600' : 'text-red-600' }}">
+                                    {{ auth()->user()->nucleoFamiliar->estado->Valor1 }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @elseif(auth()->user()->is_superadmin)
+            <!-- Banner para Superadmin -->
+            <div class="bg-indigo-100 border-l-4 border-indigo-500 p-4 mb-6 rounded-lg">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-crown text-indigo-600"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-indigo-700">
+                            <span class="font-bold">Modo Superadministrador</span> - Tienes acceso completo a todos los
+                            núcleos familiares.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        @endif
         <!-- Dashboard Stats Section -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <!-- Próximas Citas -->
@@ -286,40 +350,41 @@
     </div>
 
     <!-- Agregar sección para SuperAdmin -->
-@if(Auth::user()->isSuperAdmin() && isset($nucleoInfo))
-<div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
-    <div class="bg-blue-600 px-6 py-3">
-        <h3 class="text-lg font-semibold text-white">
-            <i class="fas fa-home mr-2"></i> Estadísticas de Núcleos Familiares
-        </h3>
-    </div>
-    
-    <div class="p-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-blue-50 p-4 rounded-lg text-center">
-                <div class="text-3xl font-bold text-blue-700 mb-2">{{ $nucleoInfo['total'] }}</div>
-                <div class="text-gray-700">Núcleos Totales</div>
+    @if (Auth::user()->isSuperAdmin() && isset($nucleoInfo))
+        <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+            <div class="bg-blue-600 px-6 py-3">
+                <h3 class="text-lg font-semibold text-white">
+                    <i class="fas fa-home mr-2"></i> Estadísticas de Núcleos Familiares
+                </h3>
             </div>
-            
-            <div class="bg-green-50 p-4 rounded-lg text-center">
-                <div class="text-3xl font-bold text-green-700 mb-2">{{ $nucleoInfo['activos'] }}</div>
-                <div class="text-gray-700">Núcleos Activos</div>
-            </div>
-            
-            <div class="bg-red-50 p-4 rounded-lg text-center">
-                <div class="text-3xl font-bold text-red-700 mb-2">{{ $nucleoInfo['inactivos'] }}</div>
-                <div class="text-gray-700">Núcleos Inactivos</div>
+
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-blue-50 p-4 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-blue-700 mb-2">{{ $nucleoInfo['total'] }}</div>
+                        <div class="text-gray-700">Núcleos Totales</div>
+                    </div>
+
+                    <div class="bg-green-50 p-4 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-green-700 mb-2">{{ $nucleoInfo['activos'] }}</div>
+                        <div class="text-gray-700">Núcleos Activos</div>
+                    </div>
+
+                    <div class="bg-red-50 p-4 rounded-lg text-center">
+                        <div class="text-3xl font-bold text-red-700 mb-2">{{ $nucleoInfo['inactivos'] }}</div>
+                        <div class="text-gray-700">Núcleos Inactivos</div>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <a href="{{ route('nucleo_familiares.index') }}"
+                        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors">
+                        <i class="fas fa-list mr-2"></i>Ver todos los núcleos
+                    </a>
+                </div>
             </div>
         </div>
-        
-        <div class="mt-4 text-center">
-            <a href="{{ route('nucleo_familiares.index') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors">
-                <i class="fas fa-list mr-2"></i>Ver todos los núcleos
-            </a>
-        </div>
-    </div>
-</div>
-@endif
+    @endif
 
     <script>
         // Script mejorado para filtrar medicamentos

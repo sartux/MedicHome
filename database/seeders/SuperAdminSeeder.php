@@ -3,21 +3,23 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class SuperAdminSeeder extends Seeder
 {
     public function run()
     {
-        // Crear usuario super administrador
-        User::create([
+        // Crear un usuario superadmin
+        DB::table('users')->insert([
             'name' => 'Super Administrador',
             'email' => 'superadmin@medichome.com',
-            'password' => Hash::make('superadmin123'),
-            'is_super_admin' => true,
-            'is_nucleo_admin' => false,
-            'nucleo_familiar_id' => null, // No pertenece a ningún núcleo
+            'password' => Hash::make('Tame892*'),
+            'is_admin' => 1,
+            'is_superadmin' => 1,
+            'nucleo_familiar_id' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 }

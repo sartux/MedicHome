@@ -14,82 +14,98 @@ class FamiliarController extends Controller
 // Añadir restricción para que sólo se muestren familiares del núcleo del usuario
 public function index()
 {
-    $user = auth()->user();
-    
     // Si es superadmin, puede ver todos los familiares
-    if ($user->isSuperAdmin()) {
-        $familiares = Familiar::with(['estado', 'tipoSangre', 'nucleoFamiliar'])->get();
+    if (auth()->user()->is_superadmin) {
+        $familiares = Familiar::with(['estado', 'tipoSangre'])->get();
     } else {
-        // Si es admin de núcleo, solo ve los familiares de su núcleo
+        // Si no, solo ve los de su núcleo familiar
+        $nucleoId = auth()->user()->nucleo_familiar_id;
         $familiares = Familiar::with(['estado', 'tipoSangre'])
-                        ->where('nucleo_familiar_id', $user->nucleo_familiar_id)
-                        ->get();
+            ->where('nucleo_familiar_id', $nucleoId)
+            ->get();
     }
     
     return view('familiares.index', compact('familiares'));
 }
+
    
-    public function create()
-    {
-        // Obtener los catálogos necesarios
-        $generos = ValorCatalogo::where('catalogos_Codigo', env('CATALOGOS_ID_GENERO'))->get();
-        $estados = ValorCatalogo::where('catalogos_Codigo', env('CATALOGOS_ID_ESTADO'))->get();
-        $tipos_sangre = ValorCatalogo::where('catalogos_Codigo', env('CATALOGOS_ID_TIPO_SANGRE'))->get();
-               
-        // Obtener enfermedades y alergias activas
-        $enfermedades = Enfermedad::where('CATA_Estado', 41)->get();
-        $alergias = Alergia::where('CATA_Estado', 41)->get();
+public function create()
+{
+    // Si no es superadmin y el núcleo ya alcanzó su límite, no permitir crear más familiares
+    if (!auth()->user()->is_superadmin) {
+        $nucleoFamiliar = auth()->user()->nucleoFamiliar;
         
-        return view('familiares.create', compact('generos', 'estados', 'tipos_sangre', 'enfermedades', 'alergias'));
-    }
-
-    public function store(Request $request)
-    {
-        $user = auth()->user();
-        $nucleoId = $user->nucleo_familiar_id;
-        
-        // Verificar disponibilidad en el núcleo familiar
-        if (!$user->isSuperAdmin()) {
-            $nucleo = $user->nucleoFamiliar;
-            
-            if (!$nucleo->puedeAgregarFamiliar()) {
-                return redirect()->route('familiares.index')
-                    ->with('error', 'No se pueden agregar más familiares a este núcleo. Límite alcanzado.');
-            }
+        if ($nucleoFamiliar && $nucleoFamiliar->limiteFamiliaresAlcanzado()) {
+            return redirect()->route('familiares.index')
+                ->with('error', 'No es posible crear más familiares. Se ha alcanzado el límite para este núcleo familiar.');
         }
-        $validated = $request->validate([
-            'nombre' => 'required|max:40',
-            'apellido' => 'required|max:40',
-            'fecha_nacimiento' => 'required|date',
-            'CATA_genero' => 'required|integer',
-            'CATA_tipo_sangre' => 'nullable|integer',
-            'correo' => 'required|max:40|email',
-            'telefono' => 'required|max:11',
-            'contacto_nombre1' => 'nullable|max:100',
-            'contacto_telefono1' => 'nullable|max:20',
-            'contacto_nombre2' => 'nullable|max:100',
-            'contacto_telefono2' => 'nullable|max:20',
-            'CATA_Estado' => 'required|integer',
-        ]);
-        $validated['nucleo_familiar_id'] = $nucleoId;
+    }
     
-        $familiar = Familiar::create($validated);
-        $familiar = Familiar::create($validated);
-        
-        // Añadir enfermedades si se han seleccionado
-        if ($request->has('enfermedades')) {
-            $familiar->enfermedades()->attach($request->enfermedades);
-        }
-        
-        // Añadir alergias si se han seleccionado
-        if ($request->has('alergias')) {
-            $familiar->alergias()->attach($request->alergias);
-        }
+    // Obtener los catálogos necesarios
+    $generos = ValorCatalogo::where('catalogos_Codigo', env('CATALOGOS_ID_GENERO'))->get();
+    $estados = ValorCatalogo::where('catalogos_Codigo', env('CATALOGOS_ID_ESTADO'))->get();
+    $tipos_sangre = ValorCatalogo::where('catalogos_Codigo', env('CATALOGOS_ID_TIPO_SANGRE'))->get();
+           
+    // Obtener enfermedades y alergias activas
+    $enfermedades = Enfermedad::where('CATA_Estado', 41)->get();
+    $alergias = Alergia::where('CATA_Estado', 41)->get();
+    
+    // Obtener la lista de núcleos familiares (para superadmin)
+    $nucleosFamiliares = null;
+    if (auth()->user()->is_superadmin) {
+        $nucleosFamiliares = \App\Models\NucleoFamiliar::where('CATA_Estado', 41)->get();
+    }
+    
+    return view('familiares.create', compact('generos', 'estados', 'tipos_sangre', 'enfermedades', 'alergias', 'nucleosFamiliares'));
+}
 
-        return redirect()->route('familiares.index')
-            ->with('success', 'Familiar creado exitosamente.');
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'nombre' => 'required|max:40',
+        'apellido' => 'required|max:40',
+        'fecha_nacimiento' => 'required|date',
+        'CATA_genero' => 'required|integer',
+        'CATA_tipo_sangre' => 'nullable|integer',
+        'correo' => 'required|max:40|email',
+        'telefono' => 'required|max:11',
+        'contacto_nombre1' => 'nullable|max:100',
+        'contacto_telefono1' => 'nullable|max:20',
+        'contacto_nombre2' => 'nullable|max:100',
+        'contacto_telefono2' => 'nullable|max:20',
+        'CATA_Estado' => 'required|integer',
+        'nucleo_familiar_id' => auth()->user()->is_superadmin ? 'required|exists:nucleo_familiars,id' : '',
+    ]);
+
+    // Si no es superadmin, usar el núcleo familiar del usuario
+    if (!auth()->user()->is_superadmin) {
+        $validated['nucleo_familiar_id'] = auth()->user()->nucleo_familiar_id;
+    }
+    
+    // Verificar si se ha alcanzado el límite de familiares
+    if (!auth()->user()->is_superadmin) {
+        $nucleoFamiliar = \App\Models\NucleoFamiliar::find($validated['nucleo_familiar_id']);
+        if ($nucleoFamiliar && $nucleoFamiliar->limiteFamiliaresAlcanzado()) {
+            return redirect()->route('familiares.index')
+                ->with('error', 'No es posible crear más familiares. Se ha alcanzado el límite para este núcleo familiar.');
+        }
     }
 
+    $familiar = Familiar::create($validated);
+    
+    // Añadir enfermedades si se han seleccionado
+    if ($request->has('enfermedades')) {
+        $familiar->enfermedades()->attach($request->enfermedades);
+    }
+    
+    // Añadir alergias si se han seleccionado
+    if ($request->has('alergias')) {
+        $familiar->alergias()->attach($request->alergias);
+    }
+
+    return redirect()->route('familiares.index')
+        ->with('success', 'Familiar creado exitosamente.');
+}
     public function edit($id)
     {
         $familiare = Familiar::with(['estado', 'genero', 'tipoSangre'])->findOrFail($id);

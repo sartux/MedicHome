@@ -10,22 +10,11 @@ class CatalogosSeeder extends Seeder
     public function run()
     {
         DB::table('catalogos')->insert([
-            ['Codigo'=> 1,
-            'nombre' => 'Género'],
-
-            ['Codigo'=> 2,
-            'nombre' => 'Presentación'],
-
-            ['Codigo'=> 3,
-            'nombre' => 'Uso'],
-
-            ['Codigo'=> 4,
-            'nombre' => 'Estado'],
-
-            ['Codigo'=> 5,
-            'nombre' => 'Especialidad'],
-
-            // Agrega más categorías según sea necesario
+            ['Codigo' => 1, 'nombre' => 'Género', 'created_at' => now(), 'updated_at' => now()],
+            ['Codigo' => 2, 'nombre' => 'Presentación', 'created_at' => now(), 'updated_at' => now()],
+            ['Codigo' => 3, 'nombre' => 'Uso', 'created_at' => now(), 'updated_at' => now()],
+            ['Codigo' => 4, 'nombre' => 'Estado', 'created_at' => now(), 'updated_at' => now()],
+            ['Codigo' => 5, 'nombre' => 'Especialidad', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }
